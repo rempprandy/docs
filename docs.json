@@ -94,12 +94,13 @@
       {
         "label": "Contracts",
         "href": "https://github.com/Blackquant-labs/blackquant-contract"
-      },
-      {
-        "label": "Status",
-        "href": "https://github.com/Blackquant-labs"
       }
-    ]
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Launch app",
+      "href": "https://blackquantlabs.com/dashboard"
+    }
   },
   "contextual": {
     "options": [
