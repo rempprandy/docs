@@ -69,8 +69,6 @@
         "group": "Developers",
         "pages": [
           "developers/architecture",
-          "developers/running-locally",
-          "developers/environment-variables",
           "developers/api-reference",
           "developers/webhooks"
         ]
