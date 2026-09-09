@@ -1,0 +1,848 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "BlackQuant TradingAgents API",
+    "description": "\nAn HTTP API over the [TradingAgents](https://github.com/TauricResearch/TradingAgents)\nmulti-agent LLM trading framework by Tauric Research, used under Apache-2.0.\n\n## Analyses are asynchronous\n\nA single analysis runs a full multi-agent debate and takes **minutes**, not\nseconds. `POST /v1/analyses` therefore returns a job reference immediately and\nthe result is collected by polling `GET /v1/analyses/{id}`.\n\n## Ratings\n\nA completed analysis carries one of `Buy`, `Overweight`, `Hold`, `Underweight`,\n`Sell` \u2014 or `REVIEW`.\n\n`REVIEW` is **not** a weak Hold. It means the run produced no parseable rating,\nso there is no opinion to act on. Check `is_review` before reading `rating`.\n\n## This API places no orders\n\nNothing here can move money. It starts analyses and returns what they decided.\n",
+    "version": "0.1.0"
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:8900",
+      "description": "Local"
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "Service"
+        ],
+        "summary": "Liveness and dependency check",
+        "description": "Unauthenticated, so a monitor with no credentials can reach it.\n\n`not_configured` is distinct from `down`: the first means TradingAgents was\nnever installed here, the second that it is present and broken. Only the\nsecond is an incident.",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/config": {
+      "get": {
+        "tags": [
+          "Service"
+        ],
+        "summary": "Effective graph configuration",
+        "description": "The configuration in force, with anything credential-shaped removed.",
+        "operationId": "config_v1_config_get",
+        "parameters": [
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EffectiveConfig"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "TradingAgents unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyses": {
+      "post": {
+        "tags": [
+          "Analyses"
+        ],
+        "summary": "Start an analysis",
+        "description": "Queue an analysis and return immediately with **202 Accepted**.\n\nThe response is a job reference, not a result \u2014 poll `poll` until `status`\nleaves `queued`/`running`.",
+        "operationId": "create_analysis_v1_analyses_post",
+        "parameters": [
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalysisRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobRef"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Analyses"
+        ],
+        "summary": "List analyses",
+        "description": "Newest first. Finished jobs are evicted after the retention window.",
+        "operationId": "list_analyses_v1_analyses_get",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 20,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobList"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyses/{job_id}": {
+      "get": {
+        "tags": [
+          "Analyses"
+        ],
+        "summary": "Get an analysis",
+        "description": "Poll for completion.\n\n`result` is populated only on `succeeded`; `error` only on `failed`. A 404\nmeans the id was never issued, or the job has aged out of retention.",
+        "operationId": "get_analysis_v1_analyses__job_id__get",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Job Id"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Job"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown or evicted job",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Analyses"
+        ],
+        "summary": "Cancel an analysis",
+        "description": "Stop waiting on a run and free its slot.\n\nA graph already mid-debate cannot truly be interrupted, so this marks the\njob `cancelled` and releases the concurrency slot rather than claiming to\nhave killed work that is still finishing.",
+        "operationId": "cancel_analysis_v1_analyses__job_id__delete",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Job Id"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Job"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AnalysisRequest": {
+        "properties": {
+          "ticker": {
+            "type": "string",
+            "maxLength": 32,
+            "minLength": 1,
+            "title": "Ticker",
+            "description": "Instrument symbol, e.g. `NVDA` or `BTC`.",
+            "examples": [
+              "NVDA"
+            ]
+          },
+          "trade_date": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "title": "Trade Date",
+            "description": "The as-of date, `YYYY-MM-DD`. The graph reasons as though standing on this date, so a future one yields nothing useful.",
+            "examples": [
+              "2024-05-10"
+            ]
+          },
+          "asset_type": {
+            "$ref": "#/components/schemas/AssetType",
+            "description": "Selects the stock or crypto pipeline.",
+            "default": "stock"
+          },
+          "analysts": {
+            "items": {
+              "$ref": "#/components/schemas/Analyst"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Analysts",
+            "description": "Analyst agents to include. Fewer analysts is cheaper and faster, and narrows what the debate can consider."
+          },
+          "max_debate_rounds": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 10.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Debate Rounds",
+            "description": "Overrides `TRADINGAGENTS_MAX_DEBATE_ROUNDS` for this run. Cost scales roughly linearly with it."
+          }
+        },
+        "type": "object",
+        "required": [
+          "ticker",
+          "trade_date"
+        ],
+        "title": "AnalysisRequest"
+      },
+      "AnalysisResult": {
+        "properties": {
+          "rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "The run's rating, or `REVIEW`."
+          },
+          "is_review": {
+            "type": "boolean",
+            "title": "Is Review",
+            "description": "True when the run produced no parseable rating. Check this before reading `rating` as an opinion."
+          },
+          "decision": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Decision",
+            "description": "The trader agent's decision text."
+          },
+          "reports": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Reports",
+            "description": "Per-agent reports from the final graph state, keyed by agent."
+          }
+        },
+        "type": "object",
+        "required": [
+          "rating",
+          "is_review"
+        ],
+        "title": "AnalysisResult"
+      },
+      "Analyst": {
+        "type": "string",
+        "enum": [
+          "market",
+          "social",
+          "news",
+          "fundamentals"
+        ],
+        "title": "Analyst",
+        "description": "The analyst agents available to a run."
+      },
+      "AssetType": {
+        "type": "string",
+        "enum": [
+          "stock",
+          "crypto"
+        ],
+        "title": "AssetType",
+        "description": "Which pipeline the graph runs. The CLI infers this; callers state it."
+      },
+      "ComponentHealth": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "`up`, `down`, or `not_configured`."
+          },
+          "detail": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "ComponentHealth"
+      },
+      "EffectiveConfig": {
+        "properties": {
+          "llm_provider": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Llm Provider"
+          },
+          "deep_think_llm": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deep Think Llm"
+          },
+          "quick_think_llm": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Quick Think Llm"
+          },
+          "max_debate_rounds": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Debate Rounds"
+          },
+          "max_risk_discuss_rounds": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Risk Discuss Rounds"
+          },
+          "online_tools": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Online Tools"
+          }
+        },
+        "type": "object",
+        "title": "EffectiveConfig",
+        "description": "The graph configuration actually in force, with credentials removed.\n\nExposed because a run's cost and behaviour are decided almost entirely by\nthese values, and reading them from a running service beats inferring them\nfrom whichever `.env` you think is loaded."
+      },
+      "Error": {
+        "properties": {
+          "detail": {
+            "type": "string",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "required": [
+          "detail"
+        ],
+        "title": "Error"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Health": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "`ok`, `degraded`, or `down`."
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "checks": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ComponentHealth"
+            },
+            "type": "object",
+            "title": "Checks"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "version",
+          "checks"
+        ],
+        "title": "Health"
+      },
+      "Job": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "Opaque job identifier."
+          },
+          "status": {
+            "$ref": "#/components/schemas/JobStatus"
+          },
+          "request": {
+            "$ref": "#/components/schemas/AnalysisRequest"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "started_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Started At"
+          },
+          "finished_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Finished At"
+          },
+          "result": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AnalysisResult"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Present only when `status` is `succeeded`."
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error",
+            "description": "Present only when `status` is `failed`."
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "request",
+          "created_at"
+        ],
+        "title": "Job"
+      },
+      "JobList": {
+        "properties": {
+          "jobs": {
+            "items": {
+              "$ref": "#/components/schemas/Job"
+            },
+            "type": "array",
+            "title": "Jobs"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          }
+        },
+        "type": "object",
+        "required": [
+          "jobs",
+          "total"
+        ],
+        "title": "JobList"
+      },
+      "JobRef": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "status": {
+            "$ref": "#/components/schemas/JobStatus"
+          },
+          "poll": {
+            "type": "string",
+            "title": "Poll",
+            "description": "URL to poll for completion."
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "poll"
+        ],
+        "title": "JobRef",
+        "description": "What creating an analysis returns \u2014 the run itself is asynchronous."
+      },
+      "JobStatus": {
+        "type": "string",
+        "enum": [
+          "queued",
+          "running",
+          "succeeded",
+          "failed",
+          "cancelled"
+        ],
+        "title": "JobStatus"
+      },
+      "Rating": {
+        "type": "string",
+        "enum": [
+          "Buy",
+          "Overweight",
+          "Hold",
+          "Underweight",
+          "Sell",
+          "REVIEW"
+        ],
+        "title": "Rating",
+        "description": "The five-tier rating, plus `REVIEW`.\n\n`REVIEW` is not a weak Hold. It means the decision text carried no parseable\nrating, so the run produced no opinion at all \u2014 treat it as missing data and\nnever map it onto the buy/sell axis."
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Analyses",
+      "description": "Start, poll and cancel analyses."
+    },
+    {
+      "name": "Service",
+      "description": "Health and effective configuration."
+    }
+  ]
+}

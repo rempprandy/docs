@@ -82,6 +82,13 @@
           "resources/troubleshooting",
           "resources/glossary"
         ]
+      },
+      {
+        "group": "TradingAgents API",
+        "openapi": {
+          "source": "/api/openapi.json",
+          "directory": "api-reference"
+        }
       }
     ]
   },
