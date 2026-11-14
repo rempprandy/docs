@@ -9,13 +9,23 @@ description: "Requesting a capital payout, supported withdrawal methods, and sta
 **Identity verification is required before initiating a withdrawal.** If you have not completed verification yet, please complete it first via [Verify your identity](/getting-started/verify-your-identity). Completing verification early ensures swift processing when you decide to withdraw funds.
 </Warning>
 
-## Supported payout methods
+## Supported payout methods & settlement velocity
 
-| Method | Typical Settlement Window |
-| --- | --- |
-| Bank transfer | 1 to 3 business days |
-| USDT (TRC-20) | Approximately 10 minutes |
-| USDT (BEP-20) | Approximately 5 minutes |
+Withdrawal requests typically clear between **30 minutes and 24 hours**, depending on liquidity pool clearing epochs, risk boundary checks, and target blockchain network finality:
+
+| Method | Settlement & Clearance Window | Post-Dispatch Finality |
+| --- | --- | --- |
+| USDT (TRC-20) | 30 minutes to 24 hours (clearing dependent) | ~10 minutes (TRON block confirmation) |
+| USDT (BEP-20) | 30 minutes to 24 hours (clearing dependent) | ~5 minutes (BNB Chain block confirmation) |
+| Bank Wire (Institutional) | 1 to 3 business days | Standard SWIFT/SEPA clearing rails |
+
+<Info>
+**Why does capital settlement take between 30 minutes and 24 hours?**
+Trading capital in BlackQuant is actively routed across decentralized liquidity pools, automated market makers, and institutional lending vaults. When a withdrawal request is submitted:
+1. **Orderly Liquidity Unwinding**: Smart Executors unwind active pool allocations during discrete 5-minute harvest epochs to prevent price impact, slippage, and premature vault exit fees.
+2. **Multi-Tier Security & Risk Clearance**: Every withdrawal undergoes automated risk reconciliation, cryptographic authorization via email and 2FA, and proof-of-reserve validation.
+3. **Automated On-Chain Dispatch**: Once security and clearing gates verify the transaction, capital is broadcast directly on-chain with an immutable transaction hash for instant block explorer verification.
+</Info>
 
 <Danger>
 **Network selection must match your recipient address.** A USDT withdrawal designated for a TRC-20 address must be broadcast over the TRC-20 network. Submitting a BEP-20 address while choosing TRC-20 routes funds to an incompatible address on that chain, resulting in irrecoverable loss.

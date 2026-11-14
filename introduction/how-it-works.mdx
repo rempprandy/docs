@@ -91,9 +91,15 @@ The core technological engine of BlackQuant is the **Smart Executor**: an autono
 
 All positions, allocations, and compounding epochs are tracked in [Positions](/platform/positions) and verifiable on block explorers.
 
-### 7. Non-custodial capital withdrawal
+### 7. Non-custodial capital withdrawal & clearance
 
-Trading capital remains under your sovereign control. When you choose to rebalance or exit, you can stop a Smart Executor with a single click to return capital to your available balance. Withdrawal requests are submitted through [Withdrawals](/platform/withdrawals) and dispatched on-chain following standard automated security checks.
+Trading capital remains strictly under your non-custodial ownership and control. When you choose to rebalance, reallocate, or exit, you can stop any Smart Executor with a single click to return capital to your unencumbered balance.
+
+Withdrawal requests are submitted through [Withdrawals](/platform/withdrawals). Capital payouts typically clear between **30 minutes and 24 hours**, depending on institutional liquidity epoch clearing, automated risk verification, and blockchain network finality:
+
+* **Liquidity Epoch Clearing**: Because active capital is deployed across live decentralized liquidity pools and institutional yield vaults, the routing engine systematically unbinds liquidity during scheduled 5-minute epoch boundaries: preventing price impact, mitigating slippage, and preserving accumulated yield.
+* **Cryptographic Security Clearance**: Every payout request is authorized through multi-factor confirmation (email sign-off and 2FA authentication) and verified against our automated risk-boundary and proof-of-reserve reconciliation engine.
+* **On-Chain Dispatch & Instant Finality**: Once cleared through automated security gates, disbursements are broadcast directly to your designated address with immutable on-chain transaction hashes.
 
 ## Real-time telemetry and data streams
 
