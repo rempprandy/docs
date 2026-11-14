@@ -24,11 +24,12 @@ sequenceDiagram
     NP->>BQ: Cryptographically signed webhook
     BQ->>BQ: Verify signature and credit account ledger
     BQ-->>U: Live balance update via SSE stream
-    U->>SE: Enable Smart Executor & allocate capital
-    Note over SE,CH: Autonomous 24/7 Execution: Smart Executor decides all routing & timing
-    SE->>CH: Autonomous mempool routing & range rebalancing
-    SE->>CH: Automated 5-min harvest epochs & compounding
-    CH-->>SE: On-chain trade settlements & harvest confirmations
+    U->>SE: 1-Click Enablement & capital allocation
+    loop Autonomous 24/7 Execution (Smart Executor decides all routing & timing)
+        SE->>CH: Autonomous mempool routing & range rebalancing
+        SE->>CH: Automated 5-min harvest epochs & compounding
+        CH-->>SE: On-chain trade settlements & harvest confirmations
+    end
     SE-->>U: Live telemetry stream, P&L, & yield accrual
 ```
 
