@@ -1,100 +1,112 @@
 ---
 title: "How it works"
-description: "End to end flow from account funding on-chain to verifiable strategy execution."
+description: "Institutional-grade architecture and operational mechanics: from delegated capital onboarding to autonomous Smart Executor execution."
 ---
 
-This guide traces capital and execution through each stage of the BlackQuant platform, connecting each step to its detailed technical reference.
+BlackQuant is institutional-grade execution infrastructure built to systematically capture decentralized market inefficiencies. By replacing manual discretion with autonomous **Smart Executors**, the platform eliminates latency disadvantages, emotional friction, and operational overhead. 
+
+The architecture operates on a foundational non-custodial principle: **the user does not manually time markets, execute orders, or manage open positions.** Instead, users establish predefined risk boundaries, allocate capital, and activate an autonomous Smart Executor. The executor's quantitative models handle market telemetry, multi-factor trade ranking, sub-second routing, position lifecycle management, and compounding 24/7.
 
 ## The full path
 
 ```mermaid
 sequenceDiagram
-    participant U as You
-    participant NP as Payment Gateway
-    participant BQ as BlackQuant Core
+    participant U as You (Capital Allocator)
+    participant NP as Payment Rails
+    participant BQ as BlackQuant Core Engine
     participant SE as Smart Executor Agent
-    participant CH as On-Chain Settlement
+    participant CH as On-Chain Liquidity & Vaults
 
-    U->>BQ: Request deposit address
-    BQ->>NP: Provision dedicated asset address
-    NP-->>BQ: Address, network and minimum threshold
-    BQ-->>U: Display network instructions
-    U->>CH: Broadcast transfer
+    U->>BQ: Request deposit allocation address
+    BQ->>NP: Provision dedicated network rails
+    NP-->>BQ: Address, native network & threshold
+    BQ-->>U: Display dedicated deposit instructions
+    U->>CH: Broadcast on-chain transfer
     CH-->>NP: Block confirmations accrue
     NP->>BQ: Cryptographically signed webhook
-    BQ->>BQ: Verify signature and credit account ledger
-    BQ-->>U: Live balance update via SSE stream
+    BQ->>BQ: Verify cryptographic signature & credit ledger
+    BQ-->>U: Real-time balance sync via SSE stream
     U->>SE: 1-Click Enablement & capital allocation
-    loop Autonomous 24/7 Execution (Smart Executor decides all routing & timing)
-        SE->>CH: Autonomous mempool routing & range rebalancing
-        SE->>CH: Automated 5-min harvest epochs & compounding
-        CH-->>SE: On-chain trade settlements & harvest confirmations
+    loop Autonomous 24/7 Execution (Smart Executor Decides All Routing & Timing)
+        SE->>CH: Real-time mempool scanning & multi-hop DEX arbitrage
+        SE->>CH: AMM liquidity rebalancing & optimal execution
+        SE->>CH: Automated 5-min harvest epochs & protocol yield compounding
+        CH-->>SE: On-chain block settlement & verifiable confirmations
     end
-    SE-->>U: Live telemetry stream, P&L, & yield accrual
+    SE-->>U: Live telemetry stream, P&L attribution, & yield accrual
 ```
 
-## Step by step
+## Step by step operational lifecycle
 
-### 1. Account funding arrives
+### 1. Dedicated capital onboarding
 
-You select an asset on [Fund your account](/getting-started/fund-your-account). The platform provisions a dedicated deposit address for that asset on a fixed decentralized network. The network assignment is fixed to protect against cross-chain transfer errors.
+Capital onboarding is streamlined through dedicated payment rails. On [Fund your account](/getting-started/fund-your-account), the system provisions a dedicated deposit address locked to the asset's native blockchain network. Network locking is enforced at the protocol layer to eliminate cross-chain transfer errors.
 
 <Danger>
-**Sending an asset over the wrong network can lead to permanent loss.** BlackQuant locks each deposit asset to its native network rather than offering a generic dropdown, specifically to prevent misrouted funds. Always send funds on the exact network displayed.
+**Cross-chain routing integrity is permanent.** BlackQuant provisions addresses locked to each asset's native blockchain rather than generic multi-chain drop-downs. This architectural constraint protects against cross-chain routing errors. Always transfer assets across the exact network displayed.
 </Danger>
 
-### 2. Block confirmations accrue
+### 2. Deterministic block confirmation schedule
 
-Each asset requires a specific number of on-chain confirmations before crediting, ranging from 1 block on the XRP Ledger to 32 confirmations on Solana. The complete schedule is listed in [Fund your account](/getting-started/fund-your-account#supported-assets).
+Transactions transition deterministically through verifiable on-chain states: `WAITING` → `CONFIRMING` → `CONFIRMED`. Block confirmation thresholds are calibrated to the underlying consensus model of each network, from 1 block on the XRP Ledger to 32 confirmations on Solana, ensuring complete finality before ledger crediting. See [Fund your account](/getting-started/fund-your-account#supported-assets).
 
-Your transaction transitions through standard states: `WAITING` → `CONFIRMING` → `CONFIRMED`. Handling for exceptions like `PARTIALLY_PAID` or `EXPIRED` is documented in [Troubleshooting](/resources/troubleshooting#deposit-states).
+### 3. Cryptographically verified ledger crediting
 
-### 3. Signed webhook verification and ledger crediting
+Incoming transfers trigger an ed25519-signed callback from our payment gateway infrastructure. BlackQuant validates the cryptographic signature prior to executing ledger state changes; invalid or tampered webhooks are rejected at the edge. See [Webhooks](/developers/webhooks).
 
-The payment gateway sends a cryptographically signed callback. BlackQuant validates the cryptographic signature before altering account records; unsigned or invalid webhooks are rejected immediately. See [Webhooks](/developers/webhooks).
+Every credit creates an immutable **ledger entry**. Account balances are derived mathematically as the sum of verifiable ledger events rather than mutable database flags, providing a complete historical audit trail.
 
-Crediting creates an immutable **ledger entry**. Your account balance is derived directly from this ledger, providing a complete historical audit trail for every credit and debit.
+### 4. Entitlement activation and strategy tier access
 
-### 4. Subscription and entitlement activation
+Subscribing to a [signal plan](/billing/plans-and-pricing) provisions dedicated execution runtimes. Term options span 30-day or 365-day access, while permanent [add-ons](/billing/add-ons) expand concurrent execution capacity and risk controls without renewal overhead.
 
-A [signal plan](/billing/plans-and-pricing) provides a structured term: 30 days for monthly subscriptions or 365 days for annual billing. Optional [add-ons](/billing/add-ons) carry permanent entitlements with no renewal requirement. Activating a plan unlocks the autonomous Smart Executors for your account tier.
+Activating a tier unlocks the autonomous Smart Executor runtimes calibrated to your selected risk profile and capital allocation.
 
-Pricing is looked up server-side from immutable item identifiers, ensuring pricing integrity cannot be modified in the browser.
+### 5. Transparent multi-tier affiliate settlement
 
-### 5. Multi-tier referral distribution
-
-When an account was referred by an existing member, commissions are distributed at the moment a subscription or add-on is purchased: **5% to the direct referrer (Tier 1)** and **2% to their upstream referrer (Tier 2)**.
+Platform growth is incentivized through transparent, on-chain verifiable affiliate distribution: **5% to direct referrers (Tier 1)** and **2% to second-generation referrers (Tier 2)**. 
 
 <Info>
-Commissions are awarded strictly on verified platform purchases, never on account deposits. Deposits represent personal capital eligible for withdrawal, whereas purchases represent platform revenue. Learn more in [Referral Hub](/platform/referral-hub).
+Commissions are calculated strictly on verified platform subscription revenue, never on customer principal deposits. Customer trading capital remains non-custodial and 100% eligible for withdrawal at all times. See [Referral Hub](/platform/referral-hub).
 </Info>
 
-### 6. Autonomous Smart Executor execution and on-chain settlement
+### 6. Autonomous Smart Executor execution
 
-BlackQuant operates on a model of complete algorithmic autonomy: **the user does not make trade decisions, evaluate chart entries, or manage open positions.** Your role is strictly to select your strategy suite, configure your initial capital allocation, and enable the Smart Executor agent. The agent handles everything else.
+The core technological engine of BlackQuant is the **Smart Executor**: an autonomous execution bot that operates directly against on-chain liquidity pools and smart contract vaults.
 
-Once enabled, the Smart Executor operates 100% autonomously around the clock:
-* **Active Arbitrage Suite (Liquidity Optimizer & MEV Arbitrage)**: The Smart Executor continuously scans decentralized exchange mempools and liquidity pool books across supported networks. It automatically detects cross-venue price discrepancies, calculates optimal routing and slippage parameters, and submits multi-hop atomic transactions to capture arbitrage spreads without requiring manual intervention.
-* **Automated Protocol Yield Suite (Yield Farmer)**: The Smart Executor autonomously allocates capital into vetted non-custodial decentralized finance vaults (such as Aave, Kamino, Marinade, and Curve). Every 5 minutes (288 automated epochs per day), the bot executes automated harvest cycles, compounding rewards back into your staking principal or routing cash payouts to your account balance.
-* **Autonomous Risk Protection**: The Smart Executor continuously monitors liquidity health, execution slippage, and stop-loss boundaries. If anomalous market conditions appear, the agent's automated fail-safes pause execution to protect your principal.
+**The user does not pick trading pairs, manage order books, or decide entry and exit timings.** Once enabled, the Smart Executor operates 100% autonomously around the clock across two specialized execution frameworks:
+
+* **Active Arbitrage Suite (Liquidity Optimizer & MEV Arbitrage)**:
+  * **Real-Time DEX Telemetry**: Monitors decentralized liquidity pools and mempools across EVM networks (Ethereum Mainnet, Arbitrum, Base) and Solana DEX pools.
+  * **Systematic Multi-Hop Routing**: Captures cross-venue pricing discrepancies and optimal routing pathways through sub-second execution logic.
+  * **Range Rebalancing**: Autonomously adjusts concentrated liquidity positions on live market prices to maximize fee generation while mitigating impermanent loss.
+  * **Senior MEV Arbitrage**: High-frequency algorithmic router engineered for institutional desks, identifying fleeting atomic arbitrage opportunities and executing priority transactions.
+* **Automated Protocol Yield Suite (Yield Farmer)**:
+  * **Audited Multi-Vault Staking**: Deploys capital into non-custodial, institutional-grade DeFi vaults (including Aave v3 Prime, Kamino Automated Yield, Marinade, and Curve).
+  * **5-Minute Compounding Epochs**: Executes 288 automated harvest cycles every 24 hours. Harvested yields are systematically compounded back into principal or routed to daily cash balances.
+  * **Cryptographic Proof of Reserves**: Assets remain verified on-chain in smart contracts audited by OpenZeppelin and Trail of Bits.
+* **Autonomous Risk Boundaries & Fail-Safe Protection**:
+  * Executors operate via delegated session keys (ERC-4337) with strict mathematical constraints on maximum slippage, position sizing caps, and stop-loss floors.
+  * Automated circuit breakers immediately halt order routing if out-of-band market conditions appear (such as abnormal pool slippage or sudden liquidity dry-ups), requiring explicit one-click authorization before resuming.
 
 All positions, allocations, and compounding epochs are tracked in [Positions](/platform/positions) and verifiable on block explorers.
 
-### 7. Capital withdrawal
+### 7. Non-custodial capital withdrawal
 
-When you wish to withdraw funds, submit a payout request in [Withdrawals](/platform/withdrawals). Requests undergo standard security and verification checks before on-chain dispatch.
+Trading capital remains under your sovereign control. When you choose to rebalance or exit, you can stop a Smart Executor with a single click to return capital to your available balance. Withdrawal requests are submitted through [Withdrawals](/platform/withdrawals) and dispatched on-chain following standard automated security checks.
 
-## Real-time platform data streams
+## Real-time telemetry and data streams
 
-| Surface | Update mechanism | Notes |
+| Operational Stream | Protocol / Architecture | Institutional Function |
 | --- | --- | --- |
-| Deposit confirmations | Server-Sent Events (`/api/deposit/stream`) | Real-time block confirmation status without manual refresh |
-| Signal engine feeds | Server-Sent Events (`/api/signal-engine/stream`) | Live strategy telemetry and calibration data |
-| Yield Farmer compounding | Live countdown timer & background polling | 5-minute harvest epochs with real-time accrual tracking |
-| Account balances | Real-time event stream and navigation sync | Derived directly from validated ledger entries |
-| Position tracking | Real-time query cache | Live synchronization with execution smart contracts |
+| Deposit Confirmations | Server-Sent Events (`/api/deposit/stream`) | Microsecond block confirmation tracking without client polling |
+| Signal Telemetry Engine | Server-Sent Events (`/api/signal-engine/stream`) | Live liquidity telemetry, order book depth, and 90% credible intervals |
+| Protocol Yield Daemon | Automated epoch timer & WebSocket sync | 5-minute harvest cycle execution and real-time yield compounding |
+| Dynamic Account Ledger | Reactive event stream | Cryptographically derived balance state synchronized across nodes |
+| Smart Contract Settlement | On-chain query cache | Real-time synchronization with EVM and Solana block states |
 
-## Next
+## Next steps
 
-* [Key concepts](/introduction/key-concepts): Terminology and system mechanics.
-* [Create an account](/getting-started/create-an-account): Set up your access credentials.
+* [Key concepts](/introduction/key-concepts): Institutional vocabulary and execution mechanics.
+* [Create an account](/getting-started/create-an-account): Account onboarding and initial security setup.
+* [The custody model](/security/custody-model): Delegated key architecture, non-custodial boundaries, and smart contract security.
