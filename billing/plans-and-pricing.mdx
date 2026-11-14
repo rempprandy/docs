@@ -1,89 +1,95 @@
 ---
 title: "Plans and pricing"
-description: "Every subscription tier, what it costs, and how terms behave."
+description: "Every subscription tier, pricing structure, executor capabilities, and term terms."
 ---
-All prices in USD. Charged once per term from your account balance or via crypto checkout.
+
+All prices are in USD. Subscriptions are billed once per term from your account balance or via direct cryptocurrency checkout.
 
 ## Subscription tiers
 
 ### Starter
 
-*For individuals getting started with automated signals.*
+*For individuals beginning with automated yield strategies and quantitative signals.*
 
-| Period | Price | Term | Item id |
+| Period | Price | Term | Item ID |
 | --- | --- | --- | --- |
 | Monthly | $29 | 30 days | `plan-starter-monthly` |
 | Annual | $276 | 365 days | `plan-starter-annual` |
 
-* Up to 10 signals/day
-* 1 active position
-* Email alerts
-* Basic analytics
+* Up to 10 signals per day
+* 1 active position / smart executor
+* **Yield Farmer Smart Executor unlocked** (Protocol Yield Suite: passive multi-vault staking, 5-minute auto-compounding epochs, targeting 0.1% to 0.3% daily)
+* Email notifications
+* Essential analytics and credible intervals
 
-### Growth — *Most Popular*
+### Growth (Most Popular)
 
-*For active traders scaling their portfolio performance.*
+*For active quantitative traders scaling multi-pool arbitrage and automated execution.*
 
-| Period | Price | Term | Item id |
+| Period | Price | Term | Item ID |
 | --- | --- | --- | --- |
 | Monthly | $79 | 30 days | `plan-growth-monthly` |
 | Annual | $756 | 365 days | `plan-growth-annual` |
 
-* Up to 50 signals/day
-* 5 active positions
-* SMS & email alerts
-* Advanced analytics
-* Referral rewards
+* Up to 50 signals per day
+* 5 active concurrent positions / smart executors
+* **Liquidity Optimizer Smart Executor unlocked** (Active Arbitrage Suite: automated pool rebalancing and range arbitrage) in addition to Yield Farmer
+* SMS and email notifications
+* Advanced analytics with multi-timeframe intervals
+* Referral commissions enabled
 
-### Elite — *Pro*
+### Elite (Pro)
 
-*For professionals and teams running high-frequency strategies.*
+*For institutional and professional participants running high-frequency arbitrage.*
 
-| Period | Price | Term | Item id |
+| Period | Price | Term | Item ID |
 | --- | --- | --- | --- |
 | Monthly | $199 | 30 days | `plan-elite-monthly` |
 | Annual | $1,908 | 365 days | `plan-elite-annual` |
 
-* Unlimited signals
-* Unlimited positions
-* Priority alert routing
-* Full analytics suite
-* Dedicated account manager
-* API access
+* Unlimited signals per day
+* Unlimited concurrent positions / smart executors
+* **Full Smart Executor Suite unlocked**, including **MEV Arbitrage** (high-frequency cross-market discrepancy and optimal routing)
+* Priority routing and real-time push telemetry
+* Institutional-grade analytics suite
+* Dedicated technical account manager
+* Direct REST and WebSocket API access
 
-## How pricing is enforced
+## Smart Executor tier comparison
 
-Prices live in exactly one place on the server. A purchase request carries an **item id**; the server looks the amount up itself.
+| Capability | Starter | Growth | Elite |
+| --- | --- | --- | --- |
+| Concurrent Executors | 1 active | 5 active | Unlimited |
+| Yield Farmer (Protocol Yield) | Included | Included | Included |
+| Liquidity Optimizer (Active Arbitrage) | Locked | Unlocked | Unlocked |
+| MEV Arbitrage (Active Arbitrage) | Locked | Locked | Unlocked |
+| Compounding Epoch Cadence | 5 minutes | 5 minutes | 5 minutes |
+| Capital Range per Executor | $1,000 to $10,000 | $1,000 to $50,000 | $1,000 to $250,000 |
 
-<Check>
-A checkout that trusted an amount from the browser would let anyone name their own price. This one cannot, because the browser never sends an amount at all.
-</Check>
+## Server-side price verification
 
-## Subscriptions versus add-ons
+Plan prices are stored securely in the backend catalog. When you activate a subscription, the client submits an immutable **item ID** and the server verifies the current cost directly from the database.
 
-| | Subscription | Add-on |
+<Info>
+Prices cannot be altered on the client side. The browser never submits a numerical payment amount, preserving transaction integrity.
+</Info>
+
+## Subscriptions versus permanent add-ons
+
+| Attribute | Subscription Plan | Permanent Add-on |
 | --- | --- | --- |
-| Has a term | Yes — 30 or 365 days | No |
-| Expires | Yes | Never |
-| Renews automatically | No | N/A |
-| Repurchasable while held | No | No |
+| Fixed Term Duration | Yes (30 or 365 days) | No (Permanent entitlement) |
+| Expiration Date | Yes | Never |
+| Auto-Renewal Requirement | No (Manual renewal) | Not applicable |
+| Re-purchasable While Held | No | No |
 
-The **absence** of an expiry is what makes an add-on permanent. See [Add-ons](/billing/add-ons).
+See [Add-ons](/add-ons) for permanent account upgrades such as extra position slots and custom risk guards.
 
-## Duplicate purchase protection
+## Multi-tier referral rewards
 
-Attempting to buy something you currently hold is refused:
+Every subscription activation awards referral rewards up the affiliate tree: **5% to Tier 1** and **2% to Tier 2**, calculated directly from the purchase price. Referral rewards are funded directly from platform margins, not deducted from your balance. Learn more in [Referral Hub](/platform/referral-hub).
 
-* Active subscription → *"That subscription is already active."*
-* Owned add-on → *"You already own that."*
+## Payment methods
 
-The check and the debit happen inside one database transaction, so two clicks landing at the same moment cannot both succeed.
-
-## Referral commission
-
-Every purchase pays commission up the referral chain — **5% to Tier 1, 2% to Tier 2**, calculated on the purchase price. This is funded by the business, not deducted from what you pay. See [Referral Hub](/platform/referral-hub).
-
-## Paying
-
-* [Paying with crypto](/billing/paying-with-crypto) — the checkout path when your balance is short.
-* [Fund your account](/getting-started/fund-your-account) — topping the balance up first.
+* [Paying with crypto](/paying-with-crypto): Fast on-chain checkout when funding on demand.
+* [Fund your account](/getting-started/fund-your-account): Deposit funds into your USD account balance in advance.

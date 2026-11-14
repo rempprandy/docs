@@ -2,76 +2,77 @@
 title: "Secure your account"
 description: "Turn on two-factor authentication and store the recovery codes properly."
 ---
-Do this before you deposit anything. Two minutes now; a much worse afternoon later if you skip it.
 
-## Enable two-factor authentication
+We strongly recommend enabling two-factor authentication before depositing digital assets. Spending two minutes now prevents critical security exposure later.
 
-Go to **Personal → 2FA / Auth Guard** in the dashboard sidebar.
+## Enable two-factor authentication (2FA)
 
-### 1. Begin enrolment
+Navigate to **Personal → 2FA / Auth Guard** in the dashboard sidebar.
 
-The platform generates a secret and shows it as a QR code plus a text fallback. The secret is encrypted at rest with a key derived from the deployment's signing secret — it is never stored in plain text.
+### 1. Begin enrollment
 
-### 2. Scan it with an authenticator app
+The platform provisions a unique secret displayed as a QR code with a manual text fallback. Secrets are encrypted at rest using envelope encryption: they are never persisted in plain text.
 
-Any TOTP app works: 1Password, Bitwarden, Aegis, Raivo, Google Authenticator, Authy.
+### 2. Scan with an authenticator app
 
-### 3. Confirm with a code
+Compatible with all standard TOTP applications: 1Password, Bitwarden, Google Authenticator, Authy, Aegis, or Raivo.
 
-Enter the current six-digit code. Enrolment is only completed once a code verifies, so a mis-scanned QR cannot lock you out — if it does not verify, nothing has changed and you can start again.
+### 3. Verify enrollment with an active code
+
+Enter the six-digit code displayed in your authenticator app. Enrollment only finalizes after a valid code is verified: if verification fails, no settings are modified and you can retry safely.
 
 <Info>
-Codes are accepted with **one step of clock skew** either side, so a phone whose clock is up to thirty seconds out still works. If codes are consistently rejected, your device clock is probably wrong by more than that — enable automatic time sync.
+Verification accommodates **one step of clock skew** (±30 seconds). If codes are repeatedly rejected, confirm that your device clock has automatic network time synchronization enabled.
 </Info>
 
-### 4. Save your recovery codes
+### 4. Secure your single-use recovery codes
 
-You are shown **ten single-use recovery codes**. Each one authenticates once, in place of your authenticator app.
+You are provided with **ten single-use recovery codes**. Each recovery code allows one emergency authentication if your mobile device is inaccessible.
 
 <Danger>
-This is the only time the codes are shown. Store them somewhere you can reach **without** your phone and **without** your password manager, if that manager is on the same phone. A printed copy in a drawer is not an unreasonable answer.
+Recovery codes are displayed only once upon initial setup. Store them in a secure, offline environment separated from your primary device and master password.
 </Danger>
 
-Spending a recovery code marks it used in the same database statement that selects it. That is what stops the same code authenticating twice from two simultaneous attempts.
+Redeeming a recovery code invalidates that specific token atomically within the database query, preventing concurrent replay attacks.
 
-## After it is on
+## Sign-in verification workflow
 
-Every sign-in asks for a code. The second factor is enforced at the authentication layer itself, not only in the sign-in form — so a caller that invokes the sign-in path directly still cannot skip it.
+Once enabled, every login requires a valid 2FA code. Authentication checks are enforced at the API middleware level, ensuring direct API requests cannot bypass secondary verification:
 
 ```mermaid
 flowchart TB
-    A[Email + password] --> B{2FA enabled?}
-    B -->|No| E[Signed in]
-    B -->|Yes| C[Prompt for code]
-    C --> D{Valid TOTP<br/>or unused recovery code?}
+    A[Submit Email and Password] --> B{2FA Configured?}
+    B -->|No| E[Session Authenticated]
+    B -->|Yes| C[Prompt for TOTP Token]
+    C --> D{Valid Code or Recovery Key?}
     D -->|Yes| E
-    D -->|No| F[Rejected — indistinguishable<br/>from a wrong password]
+    D -->|No| F[Authentication Rejected]
 ```
 
 ## Regenerating recovery codes
 
-**2FA / Auth Guard → Regenerate recovery codes** issues a fresh set of ten and invalidates every previous code. Do this if you have used several, or if you suspect a stored copy has been seen.
+Navigate to **2FA / Auth Guard → Regenerate recovery codes** to provision ten fresh recovery codes and automatically invalidate previous ones. Do this if you have consumed several backup codes or suspect they may have been exposed.
 
-## Turning it off
+## Disabling two-factor authentication
 
-Disabling 2FA requires a valid code first — so someone with only your password cannot remove it. Turning it off invalidates all outstanding recovery codes.
+Disabling 2FA requires entering an active TOTP code first, preventing an attacker with compromised passwords from turning off authentication safeguards. Disabling 2FA automatically revokes all existing recovery codes.
 
-## Session length
+## Session duration options
 
-| Choice at sign-in | Session lasts |
+| Checkbox Selection | Session Duration |
 | --- | --- |
-| "Remember me for 30 days" ticked | 30 days |
-| Unticked | 24 hours |
+| "Remember me for 30 days" checked | 30 days |
+| Unchecked | 24 hours |
 
-The session cookie is always issued with the longer lifetime; the shorter one is enforced by a timestamp inside the token itself. A JWT cannot expire when your browser closes, so the unticked option means one day rather than "until I close the tab".
+Session tokens enforce expiration timestamps within the JWT itself. On shared or public workstations, leave the box unchecked and sign out explicitly.
 
-## Recommended baseline
+## Essential security checklist
 
-* [x] 2FA enabled
-* [x] Recovery codes stored offline, separately from your password
-* [x] A unique password not used on any other exchange or wallet service
-* [x] "Remember me" left **unticked** on shared or public machines
+* [x] Two-factor authentication (TOTP) enabled
+* [x] Recovery codes stored offline in a secure location
+* [x] Unique master password not shared with any exchange or service
+* [x] "Remember me" unchecked on public or shared workstations
 
-## Next
+## Next step
 
-* [Verify your identity](/getting-started/verify-your-identity) — required before you can withdraw.
+* [Verify your identity](/verify-your-identity): Required prior to processing capital withdrawals.

@@ -2,80 +2,81 @@
 title: "Two-factor authentication"
 description: "How TOTP is implemented here, and the details that matter operationally."
 ---
-Setup instructions are in [Secure your account](/getting-started/secure-your-account). This page covers how it works and why.
 
-## What is used
+Setup instructions are in [Secure your account](/getting-started/secure-your-account). This page covers the architectural implementation and operational security parameters.
 
-**TOTP** — time-based one-time passwords, the six-digit rotating codes. Any standard authenticator app works.
+## Authentication mechanism
 
-## Where the secret lives
+**TOTP (Time-based One-Time Password)**: Rotating six-digit cryptographic tokens conforming to RFC 6238. Compatible with standard authenticator applications.
 
-Your TOTP secret is **encrypted at rest** with AES-256-GCM. It is never stored in plain text, and it is never shown again after enrolment.
+## Cryptographic secret management
+
+Your TOTP secret key is **encrypted at rest** using AES-256-GCM. Plaintext secrets are never stored in the database and are never displayed after initial enrollment.
 
 <Info>
-In the rare event that the platform's signing key is rotated, stored TOTP secrets can no longer be decrypted and enrolled users must re-enrol.
+In the rare event that platform encryption keys are rotated, stored TOTP secrets can no longer be decrypted, prompting users to re-enroll.
 
-That case is handled as a state rather than an error: authentication falls through to recovery codes, so nobody is hard-locked out — which is the other reason to keep yours somewhere reachable.
+This scenario transitions to recovery mode rather than locking accounts: users authenticate using their single-use recovery codes to provision fresh authenticators.
 </Info>
 
-## Clock skew
+## Clock drift and skew tolerance
 
-Codes are accepted with **one step of tolerance** either side of the current window. A device clock up to roughly thirty seconds out still works.
+Tokens accommodate **one step of tolerance** (±30 seconds) around the current time window, ensuring normal mobile clock variations do not prevent authentication.
 
-Consistent rejection almost always means a device clock that is wrong by more than that. Enable automatic time synchronisation.
+Consistent token rejections usually indicate local clock drift exceeding 30 seconds. Confirm that your device has network time synchronization enabled.
 
-## Recovery codes
+## Single-use recovery codes
 
-**Ten single-use codes**, issued at enrolment and shown once.
+**Ten single-use cryptographic codes**, issued at enrollment and displayed once.
 
-### The concurrency detail
+### Atomic race-condition prevention
 
-Spending a recovery code marks it used **in the same database statement that selects it**.
+Redeeming a recovery code marks the code as spent **within the identical database query that selects it**.
 
-That is what stops the same code authenticating twice from two simultaneous attempts. A naive implementation that reads, checks and then writes has a window between the check and the write where a second request can use the same code.
+This prevents replay vulnerabilities during simultaneous requests. Conventional multi-step lookups create a brief race window where concurrent threads could authenticate against the same code:
 
 ```mermaid
 sequenceDiagram
-    participant R1 as Request 1
-    participant R2 as Request 2
-    participant DB as Database
+    participant R1 as Request Thread 1
+    participant R2 as Request Thread 2
+    participant DB as Database Engine
 
-    R1->>DB: Select AND mark used (atomic)
-    R2->>DB: Select AND mark used (atomic)
-    DB-->>R1: Success — 1 row updated
-    DB-->>R2: 0 rows updated — already spent
+    R1->>DB: Atomic SELECT and UPDATE (status = SPENT)
+    R2->>DB: Atomic SELECT and UPDATE (status = SPENT)
+    DB-->>R1: Success: 1 row updated, code redeemed
+    DB-->>R2: 0 rows updated: code already spent
 ```
 
-### Regenerating
+### Regenerating recovery codes
 
-**2FA / Auth Guard → Regenerate recovery codes** issues ten fresh codes and invalidates every previous one. Do this after using several, or if a stored copy may have been seen.
+Navigate to **2FA / Auth Guard → Regenerate recovery codes** to provision ten fresh codes and immediately invalidate all outstanding previous codes. Perform this after using several backup codes or if stored copies may have been seen.
 
-## Enforcement
+## Global middleware enforcement
 
-The second factor is enforced at the **authentication layer**, not only in the sign-in form. A caller invoking the sign-in path directly still cannot skip it.
+Two-factor authentication is enforced directly at the **API authentication layer**, not merely within client-side React form components. Direct API callers cannot bypass secondary authentication.
 
-## Failure modes are indistinguishable
+## Uniform authentication responses
 
-A wrong password, a wrong 2FA code, a spent recovery code and an account that has no password (because it was created via GitHub) all fail **identically**.
+Incorrect passwords, invalid 2FA tokens, consumed recovery codes, and accounts without a password (created via GitHub OAuth) return **uniform authentication error responses**.
 
 <Info>
-This is deliberate. Distinct error messages would turn the sign-in form into an oracle for discovering which email addresses have accounts, whether they use OAuth, and whether 2FA is enabled. The cost is slightly worse ergonomics when you genuinely mistype; the benefit is that the form leaks nothing.
+Uniform error handling prevents brute-force timing attacks and prevents the sign-in endpoint from functioning as an oracle to discover registered email addresses or 2FA states.
 </Info>
 
-## Disabling
+## Disabling 2FA
 
-Requires a valid code first, so someone holding only your password cannot remove it. Disabling invalidates all outstanding recovery codes.
+Disabling two-factor authentication requires entering an active 2FA token first. Disabling automatically revokes all existing recovery codes.
 
-## Sessions
+## Session lifetime management
 
-| "Remember me" | Session lifetime |
+| "Remember me" Selection | Session Lifetime |
 | --- | --- |
-| Ticked | 30 days |
-| Unticked | 24 hours |
+| Checked | 30 days |
+| Unchecked | 24 hours |
 
-The cookie always carries the longer lifetime; the shorter one is enforced by a timestamp inside the token. A JWT cannot expire when a browser closes, so "unticked" means one day rather than "until I close the tab" — leave it unticked on shared machines and sign out explicitly.
+Session cookies default to the maximum window while shorter lifetimes are enforced via signed expiration timestamps inside the token itself. On shared workstations, leave the box unchecked and sign out explicitly.
 
-## Related
+## Related documentation
 
-* [Account recovery](/security/account-recovery)
+* [Account recovery](/account-recovery)
 * [Secure your account](/getting-started/secure-your-account)

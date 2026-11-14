@@ -1,70 +1,70 @@
 ---
 title: "Create an account"
-description: "Sign up with email or GitHub, and what happens to a referral link on the way."
+description: "Register an account with email or social authentication, and how referral attribution works."
 ---
-## Two ways in
+
+## Sign-up methods
 
 ### Email and password
 
-Go to **Sign up**, provide your email address and choose a password. Your email is stored lowercased and trimmed, so `You@Example.com ` and `you@example.com` are the same account and you cannot accidentally create two.
+Navigate to **Sign up**, enter your email address, and select a strong password. Email addresses are normalized (lowercased and trimmed) to prevent duplicate accounts.
 
-### GitHub
+### GitHub OAuth
 
-If GitHub sign-in is enabled on the deployment, the OAuth button appears on both the sign-in and sign-up screens.
+Where GitHub sign-in is enabled, you can authenticate using your GitHub developer account via the OAuth action button.
 
 <Info>
-An account created through GitHub has **no password**. Signing in with email and password against that account will not work, and will fail identically to a wrong password rather than telling you the account exists — that is deliberate, so the login form cannot be used to discover which email addresses are registered.
+Accounts initialized via GitHub OAuth do not have a password set by default. The standard sign-in form returns a generic authentication error to prevent email enumeration.
 
-To add a password later, use [Reset credentials](/security/account-recovery#changing-your-password).
+To add a password later, navigate to [Reset credentials](/security/account-recovery#changing-your-password).
 </Info>
 
-## If you arrived from a referral link
+## Referral link attribution
 
-A referral link looks like `/ref/<code>`. Visiting one stores the code in a cookie for **30 days**, then forwards you to the site.
+Referral links take the format `/ref/<code>`. Visiting an affiliate link stores the code in a secure browser cookie for **30 days** before directing you to the dashboard.
 
-That window is deliberate. Attribution that only survived a single navigation would credit almost nobody — the usual pattern is that someone reads the landing page, wanders off, and signs up several days later.
+The 30-day window ensures that affiliates receive credit even when users evaluate the platform over multiple sessions prior to completing registration.
 
-When you complete sign-up, the stored code is resolved to the referring account and the link is recorded permanently. It cannot be changed afterwards.
+Upon registration, the affiliate code binds to the referring account permanently.
 
 ```mermaid
 flowchart LR
-    A["Click /ref/abc23xyz"] --> B[Code stored in cookie]
-    B --> C[Browse, leave, return]
-    C --> D[Sign up]
-    D --> E[Referral link recorded]
-    E --> F[Commission flows on your purchases]
+    A["Click referral link"] --> B[Code saved in cookie for 30 days]
+    B --> C[Evaluate platform features]
+    C --> D[Register account]
+    D --> E[Referral link permanently bound]
+    E --> F[Commissions credited on qualifying purchases]
 ```
 
-Referral codes are eight characters from an alphabet with `0`, `o`, `1`, `l` and `i` removed, because those get misread when typed off a screen.
+Referral codes consist of eight characters generated from an unambiguous character set (omitting `0`, `o`, `1`, `l`, and `i`).
 
-## Choosing a password
+## Password security guidelines
 
-There is no maximum length and no character-class requirement designed to be annoying. Length is what matters.
+We recommend using strong, unique credentials:
 
-| Do | Don't |
+| Recommended Practice | Discouraged Practice |
 | --- | --- |
-| Use a password manager and a long random string | Reuse a password from another exchange or wallet service |
-| Use a passphrase of several unrelated words | Use a variation of a password you use elsewhere |
-| Store the recovery codes from 2FA setup separately | Keep 2FA codes in the same password manager entry as the password |
+| Generate a random password via a password manager | Reusing passwords from other exchanges or email accounts |
+| Use a multi-word passphrase with high entropy | Modifying existing passwords with predictable suffixes |
+| Store single-use 2FA recovery codes in a secure vault | Storing 2FA recovery codes in unencrypted notes |
 
-## What you get immediately
+## Immediate account entitlements
 
-* An account with a **$0.00 balance**.
-* A **referral code** of your own, usable straight away from the [Referral Hub](/platform/referral-hub).
-* A welcome notification in the bell menu.
-* Access to the dashboard, with the deposit and plan flows open.
+* Account created with a verified **$0.00 USD ledger balance**.
+* Instant personal **referral code** ready to share via [Referral Hub](/platform/referral-hub).
+* Access to the full dashboard, funding flows, and strategy documentation.
 
-## What is still gated
+## Feature prerequisites
 
-| Action | Requires |
+| Feature | Requirement |
 | --- | --- |
-| Deposit crypto | Nothing further |
-| Buy a plan or add-on | A funded balance, or crypto checkout |
-| Withdraw | [Identity verification](/getting-started/verify-your-identity) |
-| Change password | Emailed reset code |
+| Deposit cryptocurrency | No prerequisites |
+| Subscribe to a signal plan or Smart Executor | Account balance or direct crypto checkout |
+| Withdraw funds to external wallet | Completed [Identity verification](/verify-your-identity) |
+| Password modifications | Email confirmation code |
 
-## Next
+## Next step
 
-Do **not** skip straight to funding. Turn on two-factor authentication first — it takes about two minutes and it is much easier to do on an empty account than after you have a balance.
+Before depositing funds, configure two-factor authentication to ensure your assets and session keys are secured from day one.
 
-* [Secure your account](/getting-started/secure-your-account)
+* [Secure your account](/secure-your-account)

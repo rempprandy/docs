@@ -1,87 +1,107 @@
 ---
 title: "Key concepts"
-description: "The vocabulary used throughout the platform and these docs."
+description: "Key terminology and technical concepts used across the BlackQuant platform."
 ---
-Terms are listed in the order you meet them, not alphabetically. For a flat A–Z, see the [Glossary](/resources/glossary).
+
+This page outlines the core concepts and vocabulary used throughout BlackQuant and its documentation. For an alphabetical reference, see the [Glossary](/resources/glossary).
+
+## Smart Executors
+
+Automated quantitative runtimes that execute algorithmic strategies on your behalf within defined capital limits and risk boundaries. Smart Executors operate across two specialized suites:
+
+* **Active Arbitrage Suite**: High-frequency execution bots (Liquidity Optimizer and MEV Arbitrage) that rebalance liquidity pool ranges and capture cross-DEX pricing spreads.
+* **Automated Protocol Yield Suite**: Passive yield bots (Yield Farmer) that deploy capital into audited decentralized finance vaults and execute automated 5-minute compounding epochs.
+
+## Protocol Yield Engine
+
+The decentralized capital allocation system behind the Yield Farmer. Capital is distributed across vetted DeFi protocols (Aave v3 Prime on Base, Kamino Automated Yield on Solana, Marinade Liquid Staking on Solana, and Curve Stability Pool on Arbitrum) targeting daily yield between 0.1% and 0.3% (~5.2% to 7.4% APY).
+
+## Compounding Epoch
+
+A scheduled 5-minute automated harvest interval executed by the Protocol Yield Engine (running 288 epochs every 24-hour day). During each epoch, protocol rewards are claimed and either auto-compounded into the staking principal to accelerate yield or routed to daily cash payouts.
+
+## Non-Custodial Reserve Verification
+
+Cryptographic verification ensuring that funds deployed into Smart Executors are held directly inside audited smart contract vaults on-chain rather than pooled in an opaque internal reserve. All smart contract foundations have been reviewed by external security firms including OpenZeppelin and Trail of Bits.
 
 ## Account balance
 
-A **USD figure held against your account**, used to buy plans and add-ons. It is derived from your ledger rather than stored as a standalone number, so every movement in it has a row explaining where it came from.
+A USD ledger figure stored against your BlackQuant account, utilized for activating subscription plans, unlocking add-ons, or allocating to Smart Executors. The balance is derived directly from an immutable transaction ledger rather than an arbitrary database counter.
 
 <Warning>
-Your account balance is **not** your trading capital, and it is not a custodial holding of your crypto. Deposited crypto is converted to a USD credit at the time it confirms. See [The custody model](/security/custody-model).
+Your USD account balance is distinct from on-chain decentralized assets held in non-custodial wallets. When you deposit digital assets, they are credited as a USD balance upon reaching confirmation thresholds. See [The custody model](/security/custody-model).
 </Warning>
 
 ## Ledger entry
 
-One immutable row recording a movement: an amount in USD, a `kind` describing why, and a reference id pointing at whatever caused it. Deposits credit; purchases debit; commissions credit.
-
-Deriving the balance from the ledger rather than incrementing a counter is what makes the number auditable — you can always ask *why* a balance is what it is.
+An immutable audit record documenting every monetary movement on the platform: an amount in USD, a `kind` category describing the transaction type, and an associated reference identifier. Deposits credit the balance, subscription activations debit the balance, and referral rewards credit the balance.
 
 ## Deposit address
 
-An address provisioned for **one asset on one fixed network**, tied to your account. It carries a minimum amount, below which the network fee makes the transfer uneconomic to credit.
+A dedicated blockchain address provisioned for a specific asset on a fixed decentralized network. Each address has a minimum deposit threshold to ensure incoming transactions exceed necessary on-chain gas costs.
 
-Some assets additionally require an **extra id** (also called a memo or destination tag). Where one is shown, a transfer sent without it cannot be attributed to your account.
+Certain networks (such as XRP Ledger) require an additional memo or destination tag. Omitting the tag prevents automatic ledger attribution.
 
 ## Deposit state
 
-| State | Meaning |
-| --- | --- |
-| `WAITING` | Address provisioned, nothing seen on-chain yet |
-| `CONFIRMING` | Transaction seen, confirmations still accruing |
-| `CONFIRMED` | Threshold reached, balance credited |
-| `PARTIALLY_PAID` | Less than the expected amount arrived |
-| `FAILED` | The transfer did not complete |
-| `EXPIRED` | The address window closed before funds arrived |
+The lifecycle of a cryptocurrency deposit:
 
-Handling for each is in [Troubleshooting](/resources/troubleshooting#deposit-states).
+| State | Definition |
+| --- | --- |
+| `WAITING` | Address generated; waiting for transaction broadcast on-chain |
+| `CONFIRMING` | Transaction detected in mempool; block confirmations accumulating |
+| `CONFIRMED` | Confirmation threshold satisfied; balance credited to account ledger |
+| `PARTIALLY_PAID` | Transaction value arrived below the expected invoice threshold |
+| `FAILED` | Network transaction was dropped, replaced, or encountered an execution failure |
+| `EXPIRED` | Payment window closed before the transaction broadcasted |
+
+See [Troubleshooting](/resources/troubleshooting#deposit-states) for handling abnormal deposit states.
 
 ## Signal
 
-A published observation that a measurable inefficiency exists right now. A signal is **not an order**. The signal engine has no path to execution — see [Signal Engine](/platform/signal-engine).
+An analytical data event indicating a detected pricing discrepancy, order book imbalance, or statistical anomaly. A signal is not an order. The Signal Engine has no direct authority to execute trades without user configuration or Smart Executor routing.
 
 ## Credible interval
 
-The range that contains the true rate with 90% probability, given what has been observed so far. Written as `[low, high]`.
+A Bayesian statistical range that contains the true historical win rate with 90% probability, presented as `[low, high]`.
 
-This is the single most important number on the statistics screens. A strategy showing `75% [45, 93]` and one showing `75% [72, 78]` are not comparable claims: the first has barely been measured, the second has been measured a great deal.
+This metric is vital for evaluating strategy reliability. A strategy displaying `75% [45, 93]` has experienced few historical occurrences and carries broad uncertainty, whereas a strategy showing `75% [72, 78]` has resolved hundreds of observations with tight statistical confidence.
 
 <Info>
-A rate published as `null` means **not yet measured**, not zero. The platform never defaults an unmeasured rate to 0%, because that would read as a failing strategy when it is actually an unmeasured one.
+A performance rate listed as `null` indicates that outcomes are still in progress and not yet measured. The platform never defaults unmeasured results to 0%, preventing untested strategies from being misidentified as failing ones.
 </Info>
 
 ## Signal plan
 
-A **subscription** granting access to the signal feed at a given tier, with a fixed term — 30 days monthly, 365 days annual. It lapses at expiry. Tiers and prices are in [Plans and pricing](/billing/plans-and-pricing).
+A recurring access tier granting access to real-time signals and unlocking specific Smart Executors. Plans run on fixed calendar terms (30 days for monthly or 365 days for annual) without unexpected auto-renewals. Tier details are available in [Plans and pricing](/billing/plans-and-pricing).
 
 ## Add-on
 
-A **permanent** entitlement bought once, with no expiry. That absence of an expiry is exactly what makes it permanent. Listed in [Add-ons](/billing/add-ons).
+A permanent account capability purchased once with no expiration date. Add-ons include additional concurrent position slots, custom webhooks, or automated risk guards. See [Add-ons](/billing/add-ons).
 
 ## Entitlement
 
-The general term for "something your account is currently allowed to do". A plan grants one for a term; an add-on grants one forever. Entitlements are evaluated per request, against the expiry timestamp, rather than cached in your session.
+The programmatic permission granting your account specific access levels across platform services. Plans grant entitlements for fixed subscription durations, while add-ons grant entitlements indefinitely. Permissions are validated dynamically against real-time server timestamps.
 
 ## Referral tier
 
-How far up the chain a commission travels from a purchase.
+The multi-level distribution model applied to platform purchases:
 
-| Tier | Who | Rate |
+| Tier | Beneficiary | Commission Rate |
 | --- | --- | --- |
-| Tier 1 | Your direct referrer | 5% (500 bps) |
-| Tier 2 | Their referrer | 2% (200 bps) |
+| Tier 1 | Direct referring affiliate | 5% (500 basis points) |
+| Tier 2 | Second-tier upstream affiliate | 2% (200 basis points) |
 
-Rates are stored in **basis points** rather than as floats, because 5% of $29 has to be an exact decimal and `0.05 * 29` is not one.
+All commission calculations utilize integer basis points to prevent floating-point rounding errors.
 
 ## Referral code
 
-An eight-character code from an alphabet with `0`, `o`, `1`, `l` and `i` removed — those get misread off a screen and become support tickets. Attribution is remembered in a cookie for **30 days**, so a visitor who reads the site and signs up a week later is still credited.
+A unique eight-character affiliate identifier generated using a disambiguated character set (omitting easily confused characters like `0`, `o`, `1`, `l`, and `i`). Referral attribution is persisted via browser cookies for 30 days.
 
 ## KYC submission
 
-An identity verification attempt: a document type, its images, and a status of `PENDING`, `APPROVED` or `REJECTED`. Documents accepted are passport (1 side), driver's licence (2 sides) and national ID card (2 sides). See [Verify your identity](/getting-started/verify-your-identity).
+An identity verification document review consisting of identity document images, a liveness verification check, and a verification state (`PENDING`, `APPROVED`, or `REJECTED`). Required exclusively prior to capital withdrawals. See [Verify your identity](/getting-started/verify-your-identity).
 
 ## Recovery code
 
-A single-use code that stands in for your 2FA app. Spending one marks it used in the same statement that selects it, which is what stops the same code authenticating twice from two simultaneous attempts. See [Account recovery](/security/account-recovery).
+Single-use cryptographic fallback codes provided during two-factor authentication setup. Utilizing a recovery code automatically invalidates that specific token in a single atomic database query. See [Account recovery](/security/account-recovery).

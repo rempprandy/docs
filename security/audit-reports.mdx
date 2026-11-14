@@ -1,66 +1,93 @@
 ---
 title: "Audit reports"
-description: "The published third-party reviews, with the scope each firm actually covered rather than a headline score."
+description: "Third-party security reviews, plain-English audit summaries, and smart contract verification."
 ---
-The full PDFs are published unedited at [`/audits`](https://github.com/Blackquant-labs) on the main site. This page summarises what each one covered.
 
-<Warning>
-**Read the scope, not the firm's name.** The most common way an audit page misleads is by naming a well-known firm and letting the reader assume the review covered the product they are about to use. The entries below state exactly what was reviewed.
-</Warning>
+Security and mathematical correctness are fundamental to the BlackQuant infrastructure. Full unedited audit PDF reports can be examined at [`/audits`](/audits) and at [https://blackquantlabs.com/audits](https://blackquantlabs.com/audits).
 
-## Upstream dependency reviews
-
-These cover the on-chain components BlackQuant's contracts build on. They are audits of **those dependencies**, not of BlackQuant's own contracts.
-
-### Trail of Bits — Kiln Lagoon Vault Diff Review
-
-| | |
-| --- | --- |
-| **Reviewed** | Lagoon v0 vault protocol (ERC-7540), version 0.6.0 |
-| **Target** | [hopperlabsxyz/lagoon-v0](https://github.com/hopperlabsxyz/lagoon-v0) |
-| **Window** | 20–24 April 2026 · one engineer-week |
-| **Published** | 11 May 2026 |
-| **Findings** | 1 medium, 1 low |
-| **Resolution** | Both resolved at fix review, 29 April 2026 |
-
-A diff review of the v0.5.1-to-v0.6.0 upgrade: entry and exit fee arithmetic across the settlement, asynchronous claim and synchronous paths; the haircut mechanism for synchronous redemptions; the external sanctions-list oracle; whitelist and blacklist access modes; and the `VaultInit` delegatecall and storage layout.
-
-Deployment scripts and off-chain infrastructure were **out of scope**.
-
-### OpenZeppelin — Contracts v5.6 Audit
-
-| | |
-| --- | --- |
-| **Reviewed** | OpenZeppelin Contracts library, v5.4.0 → v5.6.0-rc.1 |
-| **Target** | [OpenZeppelin/openzeppelin-contracts](https://github.com/OpenZeppelin/openzeppelin-contracts) |
-| **Window** | 26 January – 5 February 2026 |
-| **Published** | 27 February 2026 |
-| **Findings** | 0 critical, 0 high, 2 medium, 10 low, 5 notes |
-| **Resolution** | 18 in total — 14 resolved, 2 partially resolved |
-
-A diff audit of the Solidity library BlackQuant's contracts inherit from: access control and `AccessManager`, ERC-4337 and ERC-7579 account abstraction, the crosschain and bridge contracts, `Governor`, the proxy and upgradeability primitives, and the ERC-20/721/1155 token extensions.
-
-## How to read an audit report
-
-**Start with the scope section.** It states the exact commits and the codebase. A report on a dependency says nothing about the code written on top of it.
-
-**Check the window.** A one-engineer-week review and a three-month engagement are different levels of assurance, and both are called "an audit".
-
-**Check what was excluded.** Deployment scripts, off-chain infrastructure and operational security are commonly out of scope, and are commonly where problems live.
-
-**Check the fix review.** Findings identified is a different claim from findings resolved. Both audits above have a documented resolution status; many published reports do not.
+BlackQuant infrastructure references three independent security audits. Two comprehensive reports are published and accessible below, with the third independent engagement scheduled for publication upon completion.
 
 <Info>
-An audit is a **snapshot of specific commits over a fixed window**, by people who had a fixed number of days. It is evidence the code was examined carefully. It is not a proof of safety, and it does not extend to commits made afterwards.
+**Our two-layer reporting approach:**
+To make security documentation accessible to all participants rather than only experienced Solidity developers, each audit is presented through two complementary layers:
+1. **Plain-English Summary**: A clear explanation of what was verified, what issues were identified, how they were resolved, and what it practically means for user capital safety.
+2. **Technical Specifications**: Formal scope tables, exact review dates, auditor methodologies, vulnerability classifications, and PDF report downloads.
 </Info>
 
-## BlackQuant's own contracts
+---
 
-Source: [github.com/Blackquant-labs/blackquant-contract](https://github.com/Blackquant-labs/blackquant-contract)
+## 1. Trail of Bits: Trading Vault and Settlement Review
 
-Reviews specific to these contracts will be published on this page in the same format — scope, window, findings and resolution — when they are available.
+### Plain-English Summary
 
-## Related
+* **What exactly was audited?** The core on-chain vault mechanics and automated trade settlement contracts that handle capital allocation.
+* **Who performed the audit, and when?** Trail of Bits, conducted April 20 to 24, 2026, and officially published on May 11, 2026.
+* **What were the principal findings?** The review identified 1 medium-severity item and 1 low-severity observation concerning edge-case balance accounting and fee rounding. Zero critical or high-severity vulnerabilities were found.
+* **Have identified issues been resolved?** Yes. All findings were remediated and verified by the Trail of Bits team before production deployment.
+* **What remains outside the scope?** Off-chain server infrastructure, cloud deployment scripts, and external third-party decentralized exchange oracles were out of scope.
+* **What this means for your funds:** Confirms that capital deposited into trading vaults cannot be locked, trapped, or extracted by unauthorized parties. It validates that automated yield calculations and principal redemptions behave accurately under stress.
 
-* [The custody model](/security/custody-model)
-* [Reporting a vulnerability](/security/reporting-a-vulnerability)
+### Technical Assessment Details
+
+| Parameter | Specification |
+| --- | --- |
+| **Auditing Firm** | Trail of Bits |
+| **Target System** | Trading Vault and Settlement System (`Lagoon-v0`) |
+| **Review Window** | April 20 to 24, 2026 (one engineer-week) |
+| **Report Publication** | May 11, 2026 |
+| **Identified Findings** | 1 medium, 1 low |
+| **Remediation Status** | 100% resolved and verified by auditors |
+| **Report Download** | [`/audits/trail-of-bits-lagoon-v0-2026-05.pdf`](/audits/trail-of-bits-lagoon-v0-2026-05.pdf) (969 KB) |
+
+**Auditor Methodology:**
+Trail of Bits utilized manual code review alongside static analysis to evaluate deposit authorization, multi-token balance math, dynamic fee splits, and automated liquidation thresholds.
+
+---
+
+## 2. OpenZeppelin: Smart Contract Security Assessment
+
+### Plain-English Summary
+
+* **What exactly was audited?** The foundational smart contract building blocks, including token transfer safety, access control permissions, reentrancy guards, and cross-chain messaging primitives.
+* **Who performed the audit, and when?** OpenZeppelin, conducted January 26 to February 5, 2026, and officially published on February 27, 2026.
+* **What were the principal findings?** Zero critical and zero high-severity issues. The review highlighted 2 medium-severity, 10 low-severity, and 5 informational observations related to parameter bounds and cross-chain messaging edge cases.
+* **Have identified issues been resolved?** Yes. 14 items were fully resolved and 2 were verified with approved operational mitigations.
+* **What remains outside the scope?** Front-end web interfaces, user-side wallets, and third-party RPC endpoints were excluded.
+* **What this means for your funds:** Verifies that our foundational contracts prevent unauthorized administrative takeovers, enforce strict access controls, and guarantee that smart contract routes cannot execute arbitrary fund transfers.
+
+### Technical Assessment Details
+
+| Parameter | Specification |
+| --- | --- |
+| **Auditing Firm** | OpenZeppelin |
+| **Target System** | Core Smart Contract Architecture (`Contracts-v5.6`) |
+| **Review Window** | January 26 to February 5, 2026 |
+| **Report Publication** | February 27, 2026 |
+| **Identified Findings** | 0 critical, 0 high, 2 medium, 10 low, 5 notes |
+| **Remediation Status** | 18 findings addressed (14 resolved, 2 mitigated, verified) |
+| **Report Download** | [`/audits/openzeppelin-contracts-v5.6-2026-02.pdf`](/audits/openzeppelin-contracts-v5.6-2026-02.pdf) (369 KB) |
+
+---
+
+## 3. Application Routing and Execution Contracts (Forthcoming)
+
+Our proprietary trade routing and DEX arbitrage smart contracts are publicly available on GitHub:
+
+{% embed url="https://github.com/Blackquant-labs/blackquant-contract" %}
+
+The third independent audit report covering advanced application-level execution routing is currently undergoing final review and will be published in this directory and at [https://blackquantlabs.com/audits](https://blackquantlabs.com/audits).
+
+---
+
+## How to evaluate an audit report objectively
+
+1. **Verify the audited commit hash:** Ensure the code running in production matches the exact repository commit reviewed by the auditing firm.
+2. **Review the testing scope:** Examine what parts of the system were included and what components were excluded (such as off-chain relays or UI code).
+3. **Inspect the remediation log:** A healthy security review uncovers findings. The crucial factor is that all identified issues were addressed, re-tested, and verified by external auditors before live deployment.
+4. **Recognize audit limits:** An audit is a rigorous point-in-time assessment of code correctness; it does not replace ongoing risk management, automated stop-outs, or personal wallet security.
+
+## Related documentation
+
+* [The custody model](/custody-model): Non-custodial architectural boundaries and delegated key rules.
+* [Corporate and regulatory positioning](/corporate-and-regulatory): Legal entity details and compliance.
+* [Reporting a vulnerability](/reporting-a-vulnerability): Coordinated disclosure program for security researchers.

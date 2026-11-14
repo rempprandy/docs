@@ -2,86 +2,87 @@
 title: "Referral Hub"
 description: "Your referral code, two commission tiers, and why deposits pay nothing."
 ---
-**Apps → Referral Hub.** Your link, your downstream, and what you have earned.
+
+**Apps → Referral Hub.** Manage your affiliate link, track downstream team members, and monitor earned commissions.
 
 ## The commission structure
 
-Two tiers, paid in **basis points** of the purchase price.
+Two tiers, calculated in **basis points** of the net purchase price:
 
-| Tier | Who earns | Rate |
+| Tier | Beneficiary | Commission Rate |
 | --- | --- | --- |
-| Tier 1 | Your direct referrer | **5%** (500 bps) |
-| Tier 2 | Their referrer | **2%** (200 bps) |
+| Tier 1 | Direct referring sponsor | **5%** (500 basis points) |
+| Tier 2 | Second-tier upstream sponsor | **2%** (200 basis points) |
 
 ```mermaid
 flowchart BT
-    C["Carol buys a $79 plan"] -->|5% = $3.95| B[Bob referred Carol]
+    C["Carol activates a $79 plan"] -->|5% = $3.95| B[Bob referred Carol]
     B -->|2% = $1.58| A[Alice referred Bob]
 ```
 
-Commission is funded by the business. It is not deducted from what the buyer pays.
+Affiliate commissions are funded directly from platform margins, never deducted from what the purchaser pays.
 
 <Info>
-Rates are stored as basis points rather than floats because 5% of $29 has to be an exact decimal, and `0.05 * 29` in floating point is not. Every amount in the ledger is a fixed-precision decimal for the same reason.
+Rates are calculated in integer basis points rather than floating-point decimals to guarantee exact decimal accounting (for example, 5% of $29 equals exactly $1.45). All ledger amounts adhere to fixed-precision decimal arithmetic.
 </Info>
 
 ## Commission is paid on purchases, never on deposits
 
-This is the single most important rule of the programme, and it is deliberate.
+This is an essential security principle of the BlackQuant affiliate structure:
 
 <Danger>
-**A deposit is still the depositor's own money.** They can withdraw it again. Paying a percentage of a deposit out as commission would therefore be a straight loss to the business — and a laundering route, since it converts a self-funded round trip into a payout.
+**Deposits remain personal user capital.** Account holders can withdraw deposited funds at any time. Awarding affiliate commissions on deposits would introduce financial instability and create artificial round-tripping risks.
 
-**A purchase is revenue the business has actually earned.** That is what commission is a share of.
+**Purchases represent earned platform revenue.** Only verified subscription plan activations and permanent add-on purchases generate affiliate payouts.
 </Danger>
 
-The consequence: recruiting someone who deposits $100,000 and never buys anything earns you nothing. Recruiting someone who buys a $29 plan earns you $1.45.
+For example: an account that deposits $100,000 without activating a plan generates zero commission. An account that activates a $79 Growth plan generates $3.95 for their Tier 1 sponsor and $1.58 for their Tier 2 sponsor.
 
-## Your referral code
+## Your affiliate referral code
 
-An **eight-character code** from an alphabet with `0`, `o`, `1`, `l` and `i` removed — those characters get misread when someone types them off a screen, and each misread is a support ticket.
+A unique **eight-character alphanumeric code** generated from a disambiguated character set (omitting ambiguous characters like `0`, `o`, `1`, `l`, and `i`).
 
-Your link is `/ref/<your-code>`.
+Your shareable referral link format is: `/ref/<your-code>`.
 
-## How attribution works
+## Multi-touch attribution model
 
 ```mermaid
 flowchart LR
-    A[Visitor clicks your link] --> B[Code stored in a cookie<br/>for 30 days]
-    B --> C[They browse, leave,<br/>come back later]
-    C --> D[They sign up]
-    D --> E[Link recorded permanently]
+    A[Visitor clicks referral link] --> B[Affiliate code persisted<br/>in cookie for 30 days]
+    B --> C[Visitor reviews platform<br/>and returns later]
+    C --> D[Visitor completes registration]
+    D --> E[Sponsorship permanently bound]
 ```
 
-The **30-day cookie** is what makes the programme work. The usual pattern is that someone reads the site, thinks about it, and signs up several days later — attribution that only survived one navigation would credit almost nobody.
+A **30-day cookie window** ensures attribution is preserved even if a prospective member explores the platform for several weeks before registering.
 
-Once recorded at sign-up, the link is permanent and cannot be reassigned.
+Once established at registration, the affiliate sponsorship is permanent.
 
-## What is on the screen
+## Referral Hub features
 
-| Block | Shows |
+| Section | Description |
 | --- | --- |
-| Your link | Code and shareable URL, with a copy button |
-| Summary | Referral count and total earned |
-| Referrals list | Everyone you referred, filterable by **All / Active / Inactive** |
-| Share row | Prepared links for common channels |
+| Affiliate Link | Your personal code and direct shareable link with one-click copy |
+| Performance Summary | Total team member count and cumulative USD earnings |
+| Downstream Directory | Comprehensive member list with active status filtering |
+| Direct Share Shortcuts | One-click share links for Telegram, X, and messaging apps |
 
-## Getting paid
+## Payout crediting and ledger records
 
-Commission is credited to your **account balance** as a ledger entry at the moment the downstream purchase settles. It behaves like any other credit from there: spendable on plans and add-ons, or withdrawable subject to [verification](/getting-started/verify-your-identity).
+Earned commissions are credited immediately to your **USD account balance** as an immutable ledger transaction at the moment a downstream purchase resolves. These funds can be utilized for plan upgrades, staked in Smart Executors, or withdrawn to external crypto wallets.
 
-## Notifications
+## Referral notification controls
 
-Referral notifications default to **off**, because a referrer with a large downstream would otherwise be notified on every purchase beneath them. Turn them on in **Personal → My Profile**.
+To avoid high message volume for active affiliates, referral alerts default to off. You can enable them under **Personal → My Profile**.
 
-## Rules
+## Program guidelines
 
-* You cannot refer yourself.
-* The link is set at sign-up and never changes.
-* Commission is calculated on the **purchase price**, not on a discounted or partial amount.
-* Both tiers are paid from the same purchase — they are not alternatives.
+* Self-referrals and circular referral trees are prohibited by programmatic constraints.
+* Affiliate bindings are permanent upon account creation.
+* Commissions are calculated on the full verified purchase price.
+* Both Tier 1 and Tier 2 commissions are disbursed concurrently on qualifying purchases.
 
-## Related
+## Related documentation
 
-* [Plans and pricing](/billing/plans-and-pricing) — what your downstream can buy
-* [Treasury](/platform/treasury) — where commission lands
+* [Plans and pricing](/billing/plans-and-pricing): Subscription options your team can activate.
+* [Treasury](/treasury): Real-time balance and ledger credit tracking.

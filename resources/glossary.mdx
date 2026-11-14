@@ -1,61 +1,72 @@
 ---
 title: "Glossary"
-description: "A–Z of terms used across the platform and this documentation."
+description: "A to Z glossary of technical terms, quant concepts, and platform features."
 ---
-**Account balance** — A USD figure held against your account, derived from your ledger and used to buy plans and add-ons. Custodial, unlike your trading capital. See [The custody model](/security/custody-model#where-the-account-balance-fits).
 
-**Add-on** — A permanent entitlement bought once, with no expiry. See [Add-ons](/billing/add-ons).
+**Account balance**: A USD figure held against your account, derived from your transaction ledger and used to fund plans, add-ons, and smart executor allocations. See [The custody model](/security/custody-model#where-the-account-balance-fits).
 
-**Basis point (bps)** — One hundredth of a percent. 500 bps = 5%. Rates are stored this way so percentages of prices stay exact.
+**Active Arbitrage Suite**: High-frequency execution engines (Liquidity Optimizer and MEV Arbitrage) that dynamically rebalance liquidity pools and capture cross-market DEX spreads.
 
-**Calibrated rate** — What a strategy's claim has historically been worth, measured against resolved outcomes. Leads over the raw score throughout the platform.
+**Add-on**: A permanent account entitlement purchased once with no expiration date. See [Add-ons](/billing/add-ons).
 
-**Confirmation threshold** — How many block confirmations an asset needs before a deposit is credited. Ranges from 1 (XRP Ledger) to 32 (Solana).
+**Automated Protocol Yield Suite**: Decentralized staking engine (Yield Farmer) that deploys capital into vetted protocol vaults with automated 5-minute compounding epochs.
 
-**Credible interval** — The range containing the true rate with 90% probability. Written `[low, high]`. The most important number on any statistics screen.
+**Basis point (bps)**: One-hundredth of a percentage point (0.01%). For example, 500 bps equals 5%. Calculations use basis points to prevent floating-point rounding errors.
 
-**Declared rate** — A claim a strategy makes about itself. Never a result, and never promoted into a measurement.
+**Calibrated rate**: The historical accuracy of a strategy's signals, verified against resolved on-chain outcomes.
 
-**Deposit address** — An address provisioned for one asset on one **fixed** network, tied to your account.
+**Compounding Epoch**: A 5-minute automated harvest cycle (288 epochs daily) executed by the Yield Farmer to claim rewards and restake into principal or pay out daily cash.
 
-**Deposit state** — `WAITING`, `CONFIRMING`, `CONFIRMED`, `PARTIALLY_PAID`, `FAILED` or `EXPIRED`. Transitions are forward-only.
+**Confirmation threshold**: The number of blockchain confirmations required before a deposit is credited to the ledger. Ranges from 1 block on XRP Ledger to 32 blocks on Solana.
 
-**Entitlement** — Something your account is currently allowed to do. Granted by a plan for a term, or by an add-on permanently. Evaluated per request.
+**Credible interval**: A Bayesian statistical range containing the true win rate with 90% confidence, expressed as `[low, high]`.
 
-**Extra id** — A memo or destination tag required by some assets. Without it, a transfer cannot be attributed to your account.
+**Declared rate**: An unverified claim stated by an algorithm before resolution. It is never treated as verified performance.
 
-**IPN** — Instant Payment Notification. The signed callback from the payment processor. The only path by which a balance increases. See [Webhooks](/developers/webhooks).
+**Deposit address**: A dedicated blockchain address provisioned for a single cryptocurrency on a fixed network.
 
-**KYC** — Know Your Customer. Identity verification, required before withdrawal.
+**Deposit state**: The operational status of a transfer (`WAITING`, `CONFIRMING`, `CONFIRMED`, `PARTIALLY_PAID`, `FAILED`, or `EXPIRED`).
 
-**Ledger entry** — One immutable row recording a movement: amount, `kind`, and a reference to its cause. Balances are the sum of these.
+**Entitlement**: A programmatic permission granting specific platform capabilities, provided temporarily by subscription plans or permanently by add-ons.
 
-**Liveness capture** — A selfie taken during verification, checking the submitter is the person in the document.
+**Extra ID (Memo / Tag)**: An additional destination identifier required on certain blockchains (such as XRP Ledger) to route funds to your account.
 
-**MEV** — Maximal Extractable Value. Value capturable by ordering, including or excluding transactions within a block.
+**IPN (Instant Payment Notification)**: A cryptographically signed webhook callback from the payment gateway to credit account ledgers. See [Webhooks](/developers/webhooks).
 
-**Non-custodial** — BlackQuant is granted permission to execute specific routes and never permission to withdraw. A contract-level distinction, not a policy one.
+**KYC (Know Your Customer)**: Identity verification required prior to processing capital withdrawals.
 
-**Payment intent** — A checkout tied to a specific purchase rather than to your balance generally. Fulfilled once, at settlement.
+**Ledger entry**: An immutable database record representing an individual financial debit or credit with an audit trail.
 
-**Position** — An open or closed trade. Concurrent limits are set by your plan tier.
+**Liquidity Optimizer**: An Active Arbitrage executor designed to rebalance liquidity positions and capture range fees across decentralized exchanges.
 
-**Profit factor** — Gross wins divided by gross losses. Published as `null` rather than infinity when there are no losses yet.
+**MEV (Maximal Extractable Value)**: Value captured by optimizing transaction sequencing, routing, and pool arbitrage within blocks.
 
-**Recovery code** — A single-use code standing in for your authenticator app. Ten are issued at 2FA enrolment.
+**MEV Arbitrage**: A high-frequency Smart Executor that captures cross-market price discrepancies across decentralized exchange pools.
 
-**Referral code** — Eight characters from an alphabet excluding `0`, `o`, `1`, `l` and `i`, because those get misread off a screen.
+**Non-custodial**: Architectural model where smart contracts can execute designated trades or vault deposits but have no authorization to withdraw user capital to external addresses.
 
-**Referral tier** — How far a commission travels up the chain. Tier 1 (direct) pays 5%; Tier 2 pays 2%.
+**Non-Custodial Reserve Verification**: Cryptographic validation confirming that assets deployed in Smart Executors are held in audited smart contract vaults on-chain.
 
-**Reliability bin** — Strategy results grouped by claimed confidence, each with its own measured rate. Answers whether a strategy is right more often when it says it is confident.
+**Position**: An active or settled trade or protocol allocation. Concurrent position limits are set by your plan tier.
 
-**Signal** — A published observation that a measurable inefficiency exists. Not an order.
+**Profit factor**: Gross profits divided by gross losses. Published as `null` when no losses have been recorded.
 
-**Signal plan** — A subscription granting feed access at a tier, for 30 or 365 days.
+**Recovery code**: Single-use cryptographic backup codes provided for account access if your 2FA authenticator is unavailable.
 
-**SSE** — Server-Sent Events. How deposit states and live signals reach the browser without polling.
+**Referral code**: A unique eight-character affiliate code used to track referrals and attribute commissions.
 
-**TOTP** — Time-based One-Time Password. The rotating six-digit codes used for 2FA.
+**Referral tier**: The commission level awarded on purchases: Tier 1 (direct) pays 5% and Tier 2 (upstream) pays 2%.
 
-**Win rate** — Proportion of resolved outcomes that were wins. `null` until something resolves — never defaulted to zero.
+**Signal**: A published mathematical observation detecting a market inefficiency or pricing gap. Not an order.
+
+**Signal plan**: A subscription granting real-time feed access and unlocking Smart Executors for 30 or 365 days.
+
+**Smart Executor**: An automated quantitative runtime that executes algorithmic trading or protocol yield strategies within strict risk parameters.
+
+**SSE (Server-Sent Events)**: Real-time unidirectional web stream pushing deposit events and market telemetry to the client without polling.
+
+**TOTP (Time-based One-Time Password)**: Rotating six-digit authentication codes used for two-factor security.
+
+**Win rate**: The proportion of resolved trades that achieved profitability. Published as `null` until trades resolve.
+
+**Yield Farmer**: An automated Smart Executor that allocates capital across vetted DeFi protocols (Aave, Kamino, Marinade, Curve) on 5-minute compounding epochs.

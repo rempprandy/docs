@@ -2,60 +2,54 @@
 title: "Add-ons"
 description: "Permanent extras sold beside the deposit flow, and the one that is not permanent."
 ---
-Add-ons are sold on the **store surface** beside the deposit flow, separately from [signal plans](/billing/plans-and-pricing). They are separate products at separate prices, and they share only the way they are paid for.
+
+Add-ons are offered on the store surface alongside the deposit flow, separately from standard [signal plans](/plans-and-pricing). They provide modular account expansions with transparent, upfront pricing.
 
 ## Permanent add-ons
 
-Bought once, owned forever. No expiry, no renewal.
+Purchased once, owned indefinitely. No expiration dates, no renewals.
 
-| Add-on | Price | What it does | Item id |
+| Add-on | Price | Description | Item ID |
 | --- | --- | --- | --- |
-| **VIP Analytics Pack** | $200 | Attribution and drawdown reporting | `vip-analytics` |
-| **Priority Support** | $150 | Four-hour response, around the clock | `priority-support` |
-| **Extra Positions Slot** | $100 | One more concurrent position | `extra-position-slot` |
-| **Risk Guard Add-on** | $250 | Automatic stop-out at your drawdown limit | `risk-guard` |
+| **VIP Analytics Pack** | $200 | Advanced attribution and Bayesian drawdown reporting | `vip-analytics` |
+| **Priority Support** | $150 | Guaranteed 4-hour response SLA, around the clock | `priority-support` |
+| **Extra Positions Slot** | $100 | Adds one concurrent position or Smart Executor slot | `extra-position-slot` |
+| **Risk Guard Add-on** | $250 | Automated on-chain stop-out at a customized drawdown threshold | `risk-guard` |
 
 <Info>
-These have **no expiry timestamp**, and that absence is precisely what makes them permanent. There is no renewal to forget and no term to track.
+Permanent add-ons carry **no expiration timestamp**. Once acquired, the capability remains permanently linked to your account profile.
 </Info>
 
-## Signal Pro — a subscription on the store surface
+## Signal Pro: subscription add-on
 
-The one exception. Signal Pro sits with the add-ons but behaves like a plan: it has a term and it lapses.
+Signal Pro is positioned within the add-on catalog but operates as a subscription term with fixed renewal cycles:
 
-| Period | Price | Term | Item id |
+| Period | Price | Term Duration | Item ID |
 | --- | --- | --- | --- |
 | Monthly | $500 | 30 days | `signal-pro-monthly` |
 | Annual | $4,800 | 365 days | `signal-pro-annual` |
 
-*Automated signals, rebalanced daily.* The annual price is **two months free** against the monthly rate — $6,000 charged as $4,800.
+*Automated signals, rebalanced daily.* Annual billing includes **two months free** compared to monthly renewals ($4,800 versus $6,000 equivalent).
 
-## Which ones are worth it
+## Selecting the right add-ons
 
-Honestly, it depends on what you already have:
-
-**Extra Positions Slot** only matters on Starter (1 position) or Growth (5). Elite is already unlimited, so buying it there does nothing.
-
-**VIP Analytics Pack** overlaps with what Growth's "Advanced analytics" and Elite's "Full analytics suite" already include. It is aimed at Starter.
-
-**Priority Support** is independent of tier, except that Elite already includes a dedicated account manager.
-
-**Risk Guard** is independent of tier and is the only add-on that changes execution behaviour rather than what you can see.
+* **Extra Positions Slot**: Valuable for accounts on Starter (1 slot) or Growth (5 slots) seeking higher executor concurrency without upgrading their entire plan tier. Elite includes unlimited slots by default.
+* **VIP Analytics Pack**: Unlocks deep statistical modeling and interval breakdowns for accounts on the Starter tier.
+* **Priority Support**: Provides 24/7 accelerated support for all tiers (Elite accounts receive a dedicated account manager separately).
+* **Risk Guard**: Integrates automated risk control directly into execution runtimes across all tiers.
 
 <Warning>
-Check your current tier's included features in [Plans and pricing](/billing/plans-and-pricing) before buying an add-on. Nothing stops you buying an add-on that duplicates something your plan already grants.
+Review your current plan's included entitlements in [Plans and pricing](/plans-and-pricing) prior to purchasing an add-on to avoid duplicating features already granted.
 </Warning>
 
-## Buying
+## How to purchase an add-on
 
-Same mechanics as a plan:
+1. Pay from your unencumbered **USD account balance**, or initiate an on-demand **cryptocurrency checkout**.
+2. The entitlement activates instantly upon payment settlement.
+3. Duplicate purchases of active permanent add-ons are prevented with an informative alert.
 
-1. Pay from your **account balance**, or start a **crypto checkout**.
-2. The entitlement is granted on settlement.
-3. Buying something you already own is refused with *"You already own that."*
+Prices are looked up server-side from immutable item identifiers: the client browser never submits an arbitrary payment figure.
 
-Prices are looked up server-side from the item id — the browser never sends an amount.
+## Referral rewards
 
-## Commission
-
-Add-on purchases pay referral commission up the chain exactly like plans do: 5% Tier 1, 2% Tier 2. See [Referral Hub](/platform/referral-hub).
+Add-on purchases disburse referral commissions identically to subscription plans: 5% to Tier 1 and 2% to Tier 2. Learn more in [Referral Hub](/platform/referral-hub).

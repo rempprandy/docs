@@ -1,67 +1,67 @@
 ---
 title: "Webhooks"
-description: "The deposit callback — the only place a balance goes up."
+description: "The deposit callback: the only place an account balance increases."
 ---
+
 ## `POST /api/deposit/ipn`
 
 <Danger>
-**This is the only endpoint in the application where a balance increases.** Without its signature check it would be an unauthenticated "give this user money" endpoint. Nothing in it trusts the caller.
+**This is the sole endpoint in the platform where an account balance increases.** Signature validation ensures requests cannot be spoofed. The handler validates cryptographic proofs before modifying internal records.
 </Danger>
 
 ## Signature verification
 
-The processor signs each callback. The application recomputes that signature over a **canonicalised** form of the body — keys sorted recursively — and compares.
+The payment gateway cryptographically signs every webhook callback. The application verifies the signature by canonicalizing the JSON payload (recursively sorting object keys) and computing an HMAC digest against the shared IPN secret:
 
 ```mermaid
 flowchart TB
-    A[Callback arrives] --> B{Signature<br/>header present?}
-    B -->|No| R[Reject — credit nothing]
-    B -->|Yes| C[Canonicalise body:<br/>recursively sort keys]
+    A[Callback received] --> B{Signature<br/>header present?}
+    B -->|No| R[Reject: credit nothing]
+    B -->|Yes| C[Canonicalize body:<br/>recursively sort keys]
     C --> D[Recompute HMAC<br/>with IPN secret]
-    D --> E{Matches?}
+    D --> E{Digest matches?}
     E -->|No| R
     E -->|Yes| F[Parse and validate payload]
     F --> G[Apply state transition]
-    G --> H[Credit ledger / fulfil intent]
+    G --> H[Credit ledger or fulfill intent]
 ```
 
-Canonicalisation matters: JSON object key order is not guaranteed across serialisers, so signing the raw bytes as received would produce mismatches on semantically identical payloads.
+Canonicalization is essential: JSON key ordering varies across serialization runtimes, so signing raw bytes would result in false verification failures on identical payloads.
 
-## Why everything answers 200
+## Response status codes
 
-Callbacks the application deliberately ignores still return **200**.
+Unrecognized or duplicate callbacks intentionally return HTTP **200**.
 
-A non-200 makes the processor retry, and retrying a callback that was intentionally ignored generates noise without ever succeeding. A 200 means *received and handled*, not *credited*.
+Returning error codes (4xx or 5xx) causes gateways to execute retry loops indefinitely. A 200 response indicates the payload was successfully *received and processed*, not necessarily that a balance was credited.
 
 ## State transitions
 
-Deposits only ever move **forward**. A late or out-of-order callback carrying an earlier state cannot walk a deposit backwards from `CONFIRMED` to `CONFIRMING`.
+Deposit transitions move strictly forward. An out-of-order callback carrying an earlier state cannot regress a transaction from `CONFIRMED` to `CONFIRMING`:
 
-| State | |
+| State | Lifecycle Stage |
 | --- | --- |
-| `WAITING` | Address issued |
-| `CONFIRMING` | Seen on-chain |
-| `CONFIRMED` | Threshold reached — credited |
-| `PARTIALLY_PAID` | Short amount |
-| `FAILED` | Did not complete |
-| `EXPIRED` | Window closed |
+| `WAITING` | Address issued; awaiting on-chain detection |
+| `CONFIRMING` | Detected in blockchain mempool |
+| `CONFIRMED` | Required block confirmations reached; balance credited |
+| `PARTIALLY_PAID` | Transaction value falls short of expected amount |
+| `FAILED` | Transaction failed or dropped from mempool |
+| `EXPIRED` | Payment window elapsed prior to broadcast |
 
-Each callback's raw payload is stored alongside the event, so a disputed deposit can be reconstructed from what actually arrived rather than from what was derived.
+Raw callback payloads are preserved alongside transaction events, enabling precise auditing and forensic reconciliation.
 
-## Two things a callback can settle
+## Callback fulfillment paths
 
-**A deposit** → credits the balance with a ledger entry.
+* **Deposit fulfillment**: Creates an immutable ledger entry and increments available account balance.
+* **Payment intent fulfillment**: Fulfills on-demand crypto checkout invoices by activating plan entitlements and distributing affiliate commissions. Handlers accept user identifiers rather than session tokens, operating cleanly in background worker environments.
 
-**A payment intent** → fulfils a crypto checkout: grants the entitlement and awards referral commission. This is why purchase logic takes a user id rather than a session — there is nobody signed in on this path.
+## Operational engineering standards
 
-## Operational notes
+* **Idempotency**: Unique payment references ensure replayed callbacks cannot trigger duplicate crediting.
+* **Ordering resilience**: Forward-only state transition logic prevents race condition anomalies.
+* **Retry tolerance**: Handlers safely process repeated deliveries without side effects.
+* **Event streaming**: Successful state updates immediately trigger Server-Sent Event pushes to active client dashboards.
 
-* **Idempotency** — a payment id is unique; a replayed callback does not double-credit.
-* **Ordering** — not guaranteed; forward-only transitions handle it.
-* **Retries** — expected. The handler must stay idempotent.
-* **Latency** — crediting follows the callback, which can lag final on-chain confirmation slightly.
+## Related documentation
 
-## Related
-
-* [API reference](/api-reference/analyses/start-an-analysis)
+* [Architecture](/architecture)
 * [Fund your account](/getting-started/fund-your-account)

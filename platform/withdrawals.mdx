@@ -1,73 +1,72 @@
 ---
 title: "Withdrawals"
-description: "Requesting a payout, the available methods, and how requests are processed."
+description: "Requesting a capital payout, supported withdrawal methods, and status tracking."
 ---
-**Apps → Withdrawals.**
+
+**Apps → Withdrawals.** Manage payout requests and review historical withdrawal disbursements.
 
 <Warning>
-**Identity verification is required before you can withdraw.** If you have not completed it, do that first — [Verify your identity](/getting-started/verify-your-identity). It is much easier to discover this requirement with a small balance than a large one.
+**Identity verification is required before initiating a withdrawal.** If you have not completed verification yet, please complete it first via [Verify your identity](/getting-started/verify-your-identity). Completing verification early ensures swift processing when you decide to withdraw funds.
 </Warning>
 
-## Methods
+## Supported payout methods
 
-| Method | Typical time |
+| Method | Typical Settlement Window |
 | --- | --- |
-| Bank transfer | 1–3 business days |
-| USDT (TRC-20) | ~10 minutes |
-| USDT (BEP-20) | ~5 minutes |
+| Bank transfer | 1 to 3 business days |
+| USDT (TRC-20) | Approximately 10 minutes |
+| USDT (BEP-20) | Approximately 5 minutes |
 
 <Danger>
-**The network is part of the address.** A USDT withdrawal to a TRC-20 address must be sent over TRC-20. Providing a BEP-20 address and selecting TRC-20 sends funds to an address that does not exist on that chain, and it is not recoverable.
+**Network selection must match your recipient address.** A USDT withdrawal designated for a TRC-20 address must be broadcast over the TRC-20 network. Submitting a BEP-20 address while choosing TRC-20 routes funds to an incompatible address on that chain, resulting in irrecoverable loss.
 
-Copy the receiving address from your wallet rather than typing it, and confirm the network in your wallet matches the method you selected here.
+Copy recipient addresses directly from your external wallet and verify that the selected network matches exactly.
 </Danger>
 
-## Requesting one
+## How to submit a withdrawal request
 
-1. Choose a **method**.
-2. Enter an **amount** — it cannot exceed your available balance.
-3. Provide the **destination**: a bank account for a transfer, or a wallet address for crypto.
-4. Submit. The request enters processing.
+1. Select your preferred **payout method** (USDT on TRC-20, BEP-20, or bank wire).
+2. Enter your desired **amount** (cannot exceed your unencumbered available balance).
+3. Provide the verified destination: external wallet address or recipient banking coordinates.
+4. Authorize the submission via the email confirmation link dispatched to your registered address.
 
-## Request states
+## Request status lifecycle
 
-| Status | Meaning |
+| Status | Definition |
 | --- | --- |
-| **Processing** | Received and being reviewed |
-| **Completed** | Sent — for crypto, a transaction hash is available |
-| **Rejected** | Not processed; the reason is shown on the row |
+| **Processing** | Request verified via email authorization and undergoing compliance check |
+| **Completed** | Payout dispatched on-chain with verifiable transaction hash |
+| **Rejected** | Request declined; explanation detailed directly in the transaction row |
 
 ```mermaid
 stateDiagram-v2
-    [*] --> Processing: Request submitted
-    Processing --> Completed: Sent
-    Processing --> Rejected: Failed checks
-    Rejected --> [*]: Balance returned
+    [*] --> Processing: Email confirmed
+    Processing --> Completed: Dispatched on-chain
+    Processing --> Rejected: Compliance or balance check failed
+    Rejected --> [*]: Capital restored to balance
     Completed --> [*]
 ```
 
-A rejected request returns the amount to your balance. It does not disappear.
+A declined request immediately restores the requested funds to your available account balance.
 
-## History
+## Transaction history and reconciliation
 
-The withdrawals screen keeps a full history with a reference (`WD-xxxx`), date, amount, method, masked destination and status. Filter by **All**, **Completed** or **Pending**.
+The withdrawals screen maintains a comprehensive log featuring a unique tracking reference (`WD-xxxx`), creation timestamp, requested amount, payout method, masked destination, and current status. Filter records by **All**, **Completed**, or **Pending**.
 
-The monthly chart above it shows withdrawal volume per month, which is a faster way to spot an unexpected month than reading the table.
+## Common rejection reasons and resolutions
 
-## Common reasons a request is rejected
-
-| Reason | Fix |
+| Issue | Resolution |
 | --- | --- |
-| Identity not verified | Complete [verification](/getting-started/verify-your-identity) |
-| Address / network mismatch | Re-submit with an address on the selected network |
-| Amount exceeds available balance | Check [Treasury](/platform/treasury) for pending debits |
-| Bank details do not match the verified name | Withdraw to an account in your own name |
+| Identity verification pending | Complete [Verify your identity](/getting-started/verify-your-identity) |
+| Incompatible network format | Ensure your address matches the selected blockchain standard |
+| Amount exceeds available balance | Check [Treasury](/treasury) for funds locked in active Smart Executors |
+| Bank account mismatch | Bank transfers must match the legal name verified during KYC |
 
-## Before your first large withdrawal
+## Operational recommendation
 
-Run the whole loop once with a small amount. Deposit, buy something, withdraw. The first time through surfaces the verification requirement, the address format your wallet expects, and how long your chosen method actually takes — all of which are better learned at $50 than at $50,000.
+We recommend executing a small test withdrawal ($50 minimum) upon initial onboarding. Testing the full cycle confirms your recipient wallet settings and identity credentials before moving substantial capital.
 
-## Related
+## Related documentation
 
-* [Treasury](/platform/treasury) — where the balance comes from
-* [Verify your identity](/getting-started/verify-your-identity) — the prerequisite
+* [Treasury](/treasury): Account balances and ledger tracking.
+* [Verify your identity](/getting-started/verify-your-identity): One-time verification prerequisites.

@@ -1,68 +1,69 @@
 ---
 title: "Treasury"
-description: "Your balance, where it came from, and every movement behind it."
+description: "Your account balance, transaction provenance, and immutable ledger history."
 ---
-**Apps → Treasury.** The full picture of your account balance and the ledger it is derived from.
 
-## Balance is derived, not stored
+**Apps → Treasury.** Complete visibility into your account balance and the underlying ledger that calculates it.
 
-This is the most important thing to understand about the screen.
+## Balance is derived from ledger transactions
 
-Your balance is not a counter that gets incremented. It is the sum of your **ledger entries** — one immutable row per movement, each carrying an amount, a `kind` explaining why, and a reference id pointing at whatever caused it.
+Your balance is not a standalone counter that gets incremented arbitrarily. It is the real-time sum of your **ledger entries**: immutable transaction rows, each recording a numerical amount, a `kind` category describing the transaction event, and a reference identifier pointing to the source event.
 
 ```mermaid
 flowchart LR
-    D[Deposit confirmed] -->|credit| L[(Ledger)]
-    P[Purchase] -->|debit| L
-    C[Referral commission] -->|credit| L
-    L --> B[Balance]
+    D[Confirmed Deposit] -->|Credit| L[(Ledger)]
+    P[Subscription or Add-on] -->|Debit| L
+    C[Referral Commission] -->|Credit| L
+    E1[Smart Executor Staking] -->|Debit / Hold| L
+    E2[Executor Harvest & Principal Return] -->|Credit| L
+    L --> B[Available Balance]
 ```
 
-The consequence is that you can always ask *why* a balance is what it is, and get an answer that reconciles. A balance stored as a single number cannot answer that question.
+This guarantees complete financial auditability: you can verify the provenance of every cent.
 
 ## What is on the screen
 
-| Block | Shows |
+| Section | Description |
 | --- | --- |
-| Stat cards | Current balance and headline movement figures |
-| Balance history | The balance over time |
-| Holdings | Breakdown of what makes up the balance |
-| Allocation | How the balance is distributed |
-| Transactions | Every ledger entry, newest first |
+| Headline Balances | Current available balance, held staking capital, and 30-day net movement |
+| Balance Trajectory | Chronological equity chart plotting balance over time |
+| Asset Allocation | Breakdown of available liquidity versus active Smart Executor allocations |
+| Ledger Ledger Feed | Every individual ledger entry, sorted newest first with transaction links |
 
-## Reading the transactions list
+## Understanding ledger entry types
 
-Each row is one ledger entry. The `kind` tells you what caused it:
+| Movement Type | Ledger Direction | Description |
+| --- | --- | --- |
+| Deposit Credited | Credit (+) | Digital asset deposit confirmed on-chain |
+| Subscription / Add-on Purchase | Debit (−) | Plan tier activation or permanent add-on purchase |
+| Referral Commission Earned | Credit (+) | Affiliate reward from downstream subscription purchase |
+| Smart Executor Allocation | Debit / Hold (−) | Staking capital reserved for active Smart Executor run |
+| Smart Executor Harvest & Settlement | Credit (+) | Return of principal plus accumulated net yield or trading gains |
+| Withdrawal Dispatched | Debit (−) | Authorized payout sent to external wallet |
 
-| Movement | Direction |
-| --- | --- |
-| Deposit credited | **+** |
-| Plan or add-on purchase | **−** |
-| Referral commission earned | **+** |
+Amounts are calculated and stored in fixed-precision decimals rather than floating-point numbers, preventing rounding errors across micro-yield accruals and commission calculations.
 
-Amounts are stored as exact decimals, never floats. This matters more than it sounds: commission of 5% on a $29 purchase has to be an exact figure, and `0.05 * 29` in floating point is not one. Rates are held in basis points and amounts in fixed-precision decimals throughout.
+## Independent blockchain reconciliation
 
-## Reconciling against the chain
+Every deposit ledger entry records the underlying on-chain transaction hash. You can paste this hash into block explorers to verify the transaction independently on the native network.
 
-A deposit's ledger entry references the deposit event, which carries the transaction hash. You can take that hash to a block explorer and confirm independently that what the platform says arrived is what actually arrived.
-
-<Check>
-This is the intended workflow, not a power-user trick. The platform is built on the assumption you will verify rather than trust, and every credit is traceable to something on-chain.
-</Check>
+<Info>
+Verification is an intentional design pillar. Every credit in your ledger originates from verifiable on-chain actions.
+</Info>
 
 ## Common questions
 
-**My deposit confirmed but the balance has not moved.**
-Crediting happens when the signed callback is verified, which can lag the final on-chain confirmation slightly. If it persists, see [Troubleshooting](/resources/troubleshooting#deposit-states).
+**My deposit reached network confirmations, but my balance hasn't updated.**
+Ledger crediting occurs upon receipt and verification of the cryptographically signed gateway webhook, which can take a few seconds after final block confirmation. See [Troubleshooting](/resources/troubleshooting#deposit-states).
 
-**A commission appeared that I did not expect.**
-Someone below you in the referral chain bought something. Tier 1 pays 5%, Tier 2 pays 2%. See [Referral Hub](/platform/referral-hub).
+**I received a commission credit unexpectedly.**
+An account linked to your referral code purchased a subscription plan or add-on. Tier 1 awards 5% and Tier 2 awards 2%. See [Referral Hub](/referral-hub).
 
-**Can I convert my balance back to crypto?**
-Via [Withdrawals](/platform/withdrawals), subject to identity verification.
+**How do I withdraw my balance to an external crypto wallet?**
+Navigate to [Withdrawals](/withdrawals) after completing your one-time identity verification.
 
-## Related
+## Related documentation
 
 * [Fund your account](/getting-started/fund-your-account)
-* [Withdrawals](/platform/withdrawals)
+* [Withdrawals](/withdrawals)
 * [Plans and pricing](/billing/plans-and-pricing)

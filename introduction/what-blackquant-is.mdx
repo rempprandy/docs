@@ -1,70 +1,89 @@
 ---
 title: "What BlackQuant is"
-description: "The product in plain terms, and the three parts it is actually made of."
+description: "The product in plain terms, corporate entity, and the core layers it is built upon."
 ---
-BlackQuant is execution infrastructure. It does three separable things, and it helps to keep them separate in your head because they fail independently and are priced independently.
+
+BlackQuant is algorithmic execution infrastructure designed for decentralized digital asset markets, operated by **BlackQuant Labs LLC**, a Delaware limited liability company (File Number: 10814234).
+
+The platform delivers three distinct components that operate together while remaining structurally separated:
 
 ## The three parts
 
 ### 1. The signal engine
 
-A process that watches the on-chain trade feed, fires a signal when a measurable inefficiency appears, and then — this is the unusual part — **measures what that signal was actually worth afterwards**.
+A real-time monitoring engine that observes on-chain liquidity feeds, detects market inefficiencies, and systematically measures what those signals yield afterwards.
 
-The engine publishes win rates only once something has resolved. Before that it publishes `null`, not zero. "Not measured yet" and "measured at 0%" are different claims and only one of them is an indictment of a strategy, so the platform refuses to collapse them into the same number.
+The engine publishes win rates and performance metrics only after positions resolve. Prior to resolution, it publishes `null` rather than zero. An unmeasured outcome is fundamentally different from a failing one, and the platform never collapses them into the same number.
 
-Every rate the engine publishes carries a **90% credible interval**, because 3 wins out of 4 and 300 out of 400 are both "75%" and only one is worth acting on.
+Every performance metric published by the engine includes a **90% credible interval**, giving you clear mathematical bounds on statistical confidence rather than misleading point estimates.
 
-<Check>
-**The engine cannot place orders.** Nothing reachable from the signal engine API can move money. It is a measurement and publication system, structurally separated from execution.
-</Check>
+<Info>
+**The engine cannot place orders.** Nothing reachable from the signal engine API can move funds. It is strictly a measurement and analytical intelligence service, separated by architecture from execution.
+</Info>
 
-### 2. The execution layer
+### 2. The dual-engine execution layer
 
-The on-chain contracts that route a trade once you have acted on a signal. These are the audited, open-source part: [github.com/Blackquant-labs/blackquant-contract](https://github.com/Blackquant-labs/blackquant-contract).
+The non-custodial smart contracts and automated execution runtimes that carry out quantitative strategies. The open-source smart contract foundation is accessible at [github.com/Blackquant-labs/blackquant-contract](https://github.com/Blackquant-labs/blackquant-contract).
 
-Execution is non-custodial. The contracts are granted permission to execute specific routes and are never granted permission to withdraw. See [The custody model](/security/custody-model).
+Execution operates across two specialized strategy suites:
+
+* **Active Arbitrage Suite (Liquidity Optimizer & MEV Arbitrage)**: Built for dynamic market conditions. It continuously tracks decentralized exchange order books and automated market maker pools to capture pricing discrepancies and rebalance liquidity ranges. MEV Arbitrage represents our senior high-frequency trading (HFT) execution strategy.
+* **Automated Protocol Yield Suite (Yield Farmer)**: Built for steady, non-custodial capital accumulation. It allocates assets across vetted decentralized finance protocols (including Aave, Kamino, Marinade, and Curve) with automated 5-minute compounding epochs and cryptographic proof of reserves.
+
+All execution contracts are non-custodial: they are granted permission to execute designated routes and deposit into vetted protocol vaults, but have no code path to withdraw user capital to unauthorized destinations. Core contracts and vault routing systems have been audited by OpenZeppelin and Trail of Bits. See [The custody model](/security/custody-model) and [Audit reports](/security/audit-reports).
 
 ### 3. The account layer
 
-Everything in the dashboard: your USD balance, deposits, plan subscription, positions, referrals, identity verification and security settings. This is the part that looks like a normal web application, because it is one.
+The secure dashboard interface where you manage your USD balance, funding deposits, signal subscription tiers, Smart Executors, referral rewards, and security credentials.
 
 ```mermaid
 flowchart TB
-    subgraph Measure["Signal engine — measures, cannot trade"]
-        SE[Trade feed watcher]
-        ST[Strategy statistics]
+    subgraph Measure["Signal Engine: Market Analytics & Telemetry"]
+        SE[On-Chain Trade Watcher]
+        ST[Calibrated Strategy Intervals]
         SE --> ST
     end
-    subgraph Execute["Execution layer — on-chain, non-custodial"]
-        CT[Routing contracts]
+    subgraph Execute["Execution Layer: Non-Custodial Smart Contracts"]
+        direction TB
+        ARB[Active Arbitrage Suite: DEX Rebalancing & MEV]
+        YLD[Protocol Yield Suite: Audited Multi-Vault Staking]
     end
-    subgraph Account["Account layer — the dashboard"]
-        BAL[USD balance]
-        SUB[Plan subscription]
-        POS[Position history]
+    subgraph Account["Account Layer: User Dashboard"]
+        BAL[USD Account Balance]
+        SUB[Signal Plan Tier]
+        EXE[Smart Executor Control]
     end
-    ST -.published to.-> Account
-    Account -.you act.-> CT
-    CT -.settles.-> POS
+    ST -.Live feeds.-> Account
+    Account -.User instructs.-> Execute
+    Execute -.On-chain settlement.-> Account
 ```
 
-The dotted lines matter. The engine *publishes to* the dashboard; it does not instruct the contracts. You are the step in between.
+The dashed lines represent essential security boundaries. The signal engine publishes intelligence to the dashboard; it cannot trigger smart contracts on its own. You maintain full authority over execution.
+
+## Commercial positioning and strategy tiers
+
+BlackQuant is built to accommodate varying participant profiles and risk objectives:
+
+* **Beginners & Passive Participants**: The Automated Protocol Yield Suite (Yield Farmer) prioritizes capital preservation, over-collateralized lending markets, and automated 5-minute auto-compounding without fast-paced manual trade execution.
+* **Active Quantitative Traders**: The Active Arbitrage Suite (Liquidity Optimizer) provides automated liquidity range rebalancing across dynamic AMM pools.
+* **Institutional & Professional Teams**: MEV Arbitrage leverages high-frequency mempool scanning and optimal multi-hop routing to capture fleeting cross-market price discrepancies.
 
 ## What it is not
 
-**It is not a custodial exchange.** There is no BlackQuant wallet holding your assets that you withdraw from. Your USD balance in the dashboard is an account balance for buying plans and add-ons — it is not your trading capital, and it is not held against your keys.
+**It is not a custodial exchange.** BlackQuant does not hold your assets in an opaque centralized wallet. Your USD dashboard balance is a transparent ledger for funding subscriptions and allocations.
 
-**It is not a managed fund.** Nobody at BlackQuant trades on your behalf with discretion. The engine publishes measurements; acting on them is yours.
+**It is not a discretionary hedge fund.** Nobody at BlackQuant makes subjective investment decisions on your behalf. Strategies operate strictly according to algorithmic rules and parameters you define.
 
-**It is not a signal group.** The distinguishing feature is the measurement discipline — published intervals, `null` for unmeasured, and on-chain settlement you can verify independently. A signal without a measured outcome attached is not a product this platform ships.
+**It is not an unverified signal channel.** Every strategy metric is anchored by historical resolution, statistical credible intervals, and verifiable on-chain settlement.
 
-## The honest limitations
+## Realistic infrastructure principles
 
-* **The engine measures the past.** Every statistic on the platform is backward-looking. A 90% credible interval quantifies sampling uncertainty, not regime change.
-* **Audits are snapshots.** The published reports cover specific commits over fixed windows. See [Audit reports](/security/audit-reports) for what each one actually covered.
-* **Latency is infrastructure, not magic.** The edge available to any participant decays as more participants have the same infrastructure.
+* **Historical data informs probability, not certainty.** Every published performance figure reflects historical observations. Statistical intervals quantify sampling variance, not future market regimes.
+* **Audits confirm contract security within tested scopes.** Security audits from OpenZeppelin and Trail of Bits verify contract logic and reserve mechanics; they do not eliminate broader market risk.
+* **Infrastructure edge relies on reliable engineering.** Low-latency decentralized exchange connectivity and automated 5-minute compounding epochs provide consistent execution, free of exaggerated claims or fictional speeds.
 
 ## Next
 
-* [How it works](/introduction/how-it-works) — the end-to-end flow, step by step.
-* [Key concepts](/introduction/key-concepts) — the vocabulary used throughout these docs.
+* [Corporate and regulatory positioning](/security/corporate-and-regulatory): Legal registration in Delaware and regulatory positioning.
+* [How it works](/how-it-works): The end-to-end operational flow, step by step.
+* [Key concepts](/key-concepts): Essential vocabulary and definitions.

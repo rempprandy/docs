@@ -1,81 +1,75 @@
 ---
 title: "Verify your identity"
-description: "What documents are accepted, how to photograph them, and how review works."
+description: "Accepted identity documents, image capture requirements, and compliance reviews."
 ---
-Identity verification is required before you can withdraw. Everything else on the platform works without it.
 
-Go to **Personal → Verification**.
+Identity verification is required before you can withdraw capital. Depositing assets, subscribing to plans, and running Smart Executors operate without upfront verification.
 
-## Accepted documents
+Navigate to **Personal → Verification**.
 
-| Document | Sides required |
+## Accepted identity documents
+
+| Document | Sides Required | Notes |
+| --- | --- | --- |
+| Passport | 1 page | Photo / data page only |
+| Driver's License | 2 sides | Front and reverse |
+| National Identity Card | 2 sides | Front and reverse |
+
+## Document capture requirements
+
+All submissions must meet standard image quality criteria:
+
+* Document must be **valid and unexpired**
+* **All four edges and corners** must be fully visible
+* Text, MRZ codes, and photographs must be **sharp and legible**
+* **No heavy reflections, glare, shadows, or digital alterations**
+
+### Image format limits
+
+| Parameter | Specification |
 | --- | --- |
-| Passport | 1 — photo page only |
-| Driver's licence | 2 — front and back |
-| National ID card | 2 — front and back |
+| Supported Formats | JPEG, PNG, WebP |
+| Maximum File Size | 8 MB per image |
 
-## Photo requirements
+Standard mobile camera photos easily meet these technical specifications.
 
-All four must hold, or the submission is rejected on review:
+## Facial liveness verification
 
-* Document must be **valid and not expired**
-* **All four corners** must be visible
-* Text must be **clearly legible**
-* **No glare, shadows or obstructions**
+Following document upload, you complete a quick **liveness capture**: a real-time selfie verified via algorithmic liveness detection to ensure the submitter matches the photo document.
 
-### File limits
-
-| | |
-| --- | --- |
-| Formats | JPEG, PNG, WebP |
-| Maximum size | 8 MB per image |
-
-<Info>
-8 MB is deliberately modest. These are photographs of a document, not archival scans — a phone camera shot at default settings lands well inside it. If yours does not, your camera is set to something unusual.
-</Info>
-
-## The liveness step
-
-After the document images, you are asked for a **liveness capture** — a selfie, taken in the moment, to check that the person submitting the document is the person in it.
-
-## Submission flow
+## Review workflow
 
 ```mermaid
 flowchart LR
-    A[Choose document type] --> B[Upload front]
-    B --> C{Two sides<br/>required?}
-    C -->|Yes| D[Upload back]
-    C -->|No| E[Liveness capture]
+    A[Select Document Type] --> B[Upload Front Image]
+    B --> C{Two Sides Required?}
+    C -->|Yes| D[Upload Reverse Image]
+    C -->|No| E[Facial Liveness Check]
     D --> E
-    E --> F[Status: PENDING]
-    F --> G{Review}
+    E --> F[Status: PENDING Review]
+    F --> G{Automated / Manual Review}
     G -->|Approved| H[Status: APPROVED]
-    G -->|Rejected| I[Status: REJECTED<br/>with a note]
+    G -->|Declined| I[Status: REJECTED with note]
     I --> A
 ```
 
-## Statuses
+## Verification statuses
 
-| Status | Meaning |
+| Status | Definition |
 | --- | --- |
-| `PENDING` | Submitted, awaiting review |
-| `APPROVED` | Verified — withdrawals unlocked |
-| `REJECTED` | Not accepted; a review note explains why |
+| `PENDING` | Received and undergoing automated review |
+| `APPROVED` | Identity verified; capital withdrawals unlocked |
+| `REJECTED` | Submission declined; explanation note provided |
 
-A rejection is not final. Read the note, fix the specific problem, and submit again. The overwhelming majority of rejections are glare on a laminated card or a cropped corner.
+Declined submissions include specific guidance so you can retake the photo with improved lighting or sharper framing and re-submit immediately.
 
-## Where your documents are stored
+## Data storage and privacy safeguards
 
-Documents go to **private object storage** — never a public directory, and never the application database.
+* Submitted images are stored in encrypted private object storage vaults, isolated from public web directories.
+* Verification data is strictly utilized for compliance and is never shared with third parties.
+* You can export all account records at any time via **My Profile → Export account data**.
+* Account deletion under **My Profile** cascades to purge all stored identity documents.
 
-They are readable only by the review process, and are not served over any public URL.
+## Next step
 
-## Privacy
-
-* Documents are used for verification and are not shared with other users.
-* You can export everything the platform holds on you from **My Profile → Export account data**.
-* Account deletion is available from **My Profile**, and cascades to submissions and documents.
-
-## Next
-
-* [Fund your account](/getting-started/fund-your-account)
+* [Fund your account](/fund-your-account): Deposit assets and fund your balance.

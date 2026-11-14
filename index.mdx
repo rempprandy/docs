@@ -1,25 +1,26 @@
 ---
 title: "Welcome to BlackQuant"
-description: "Non-custodial execution infrastructure for on-chain markets — what it does, how to start, and where everything lives."
+description: "Non-custodial execution infrastructure for on-chain markets: what it does, how to start, and where everything lives."
 ---
-BlackQuant is a **non-custodial execution platform for on-chain markets**. It watches liquidity across several chains, fires signals when a measurable edge appears, and settles every resulting trade on-chain where you can verify it yourself.
 
-Non-custodial is the load-bearing word. BlackQuant is granted permission to execute specific routes on your behalf and is never granted permission to withdraw. Your keys stay yours for the entire lifetime of the account.
+BlackQuant is **non-custodial execution infrastructure for on-chain digital asset markets**, operated by **BlackQuant Labs LLC**, a Delaware limited liability company (File Number: 10814234). It watches liquidity across major blockchain networks, fires signals when empirical edges appear, and settles executions on-chain where you can verify every transaction independently.
+
+Non-custodial is the load-bearing foundation. BlackQuant is granted permission via scoped session keys (ERC-4337) to execute specific routing parameters and vault allocations on your behalf, and is never granted permission to withdraw your capital. Your private keys stay yours for the entire lifetime of your account.
 
 <Info>
-**New here?** The fastest path from nothing to a running account is five pages long: [Create an account](/getting-started/create-an-account) → [Secure your account](/getting-started/secure-your-account) → [Verify your identity](/getting-started/verify-your-identity) → [Fund your account](/getting-started/fund-your-account) → [Choose a signal plan](/getting-started/choose-a-signal-plan).
+**New here?** The fastest path from initial setup to a running account is five straightforward steps: [Create an account](/getting-started/create-an-account) → [Secure your account](/getting-started/secure-your-account) → [Verify your identity](/getting-started/verify-your-identity) → [Fund your account](/getting-started/fund-your-account) → [Choose a signal plan](/getting-started/choose-a-signal-plan).
 </Info>
 
 ## Where to go
 
 | Section | What is in it |
 | --- | --- |
-| [**Introduction**](/introduction/what-blackquant-is) | What the platform actually does, the vocabulary it uses, and who it suits. |
+| [**Introduction**](/introduction/what-blackquant-is) | What the platform actually does, corporate entity details, vocabulary, and audience. |
 | [**Getting started**](/getting-started/create-an-account) | Account creation through to a funded account with an active plan. |
-| [**Using the platform**](/platform/control-center) | Every screen in the dashboard, one page each. |
-| [**Billing**](/billing/plans-and-pricing) | Plans, add-ons and how crypto checkout settles. |
-| [**Security**](/security/custody-model) | The custody model, 2FA, recovery, and the published audits. |
-| [**Developers**](/developers/architecture) | Architecture, local setup, environment, API and webhooks. |
+| [**Using the platform**](/platform/control-center) | Every dashboard screen and execution interface, one page each. |
+| [**Billing**](/billing/plans-and-pricing) | Subscription plans, permanent add-ons, and crypto checkout flows. |
+| [**Security & Corporate**](/security/corporate-and-regulatory) | Corporate entity records, regulatory positioning, custody model, 2FA, recovery, and audits. |
+| [**Developers**](/developers/architecture) | Technical stack, production operational status, API endpoints, and webhooks. |
 
 ## The short version
 
@@ -28,30 +29,31 @@ flowchart LR
     A[Sign up] --> B[Enable 2FA]
     B --> C[Verify identity]
     C --> D[Deposit crypto]
-    D --> E[Buy a signal plan]
-    E --> F[Signals fire]
-    F --> G[Positions settle on-chain]
+    D --> E[Activate a plan]
+    E --> F[Signals stream]
+    F --> G[Smart Executors run]
     G --> H[Withdraw]
 ```
 
-Each step is a page in [Getting started](/getting-started/create-an-account). Nothing in the chain is optional except the last one.
+Each step corresponds to a dedicated guide in [Getting started](/getting-started/create-an-account).
 
 ## What BlackQuant never does
 
-These are structural guarantees, not policy promises — they follow from how the system is built, and the [custody model](/security/custody-model) explains why.
+These are structural guarantees, not policy promises: they follow directly from our system architecture, as detailed in [The custody model](/security/custody-model):
 
-* It never holds your private keys.
-* It never has withdrawal permission on your wallet.
-* It never places an order from the signal engine. The engine measures and publishes; it cannot move money. See [Signal Engine](/platform/signal-engine).
-* It never pays referral commission on a deposit — only on a purchase. See [Referral Hub](/platform/referral-hub) for why that distinction matters.
+* It never holds your external wallet private keys.
+* It never has withdrawal permission on your assets.
+* It never co-mingles trading capital with operational platform accounts.
+* It never places an order from the signal engine API. The engine measures and publishes; it cannot move money. See [Signal Engine](/platform/signal-engine).
+* It never pays referral commission on a deposit, only on a purchase. See [Referral Hub](/platform/referral-hub) for why that distinction matters.
 
 ## Status and transparency
 
-* **Audits** — the full third-party reports are published unedited, with the scope each firm actually reviewed, at [Audit reports](/security/audit-reports).
-* **Uptime** — the public status page is published by an external monitor watching `/api/health`, deliberately hosted off this infrastructure.
-* **Contracts** — the on-chain contracts are open source at [github.com/Blackquant-labs/blackquant-contract](https://github.com/Blackquant-labs/blackquant-contract).
-* **Changelog** — every notable change is recorded in the [changelog](https://github.com/Blackquant-labs).
+* **Corporate Entity**: Legally registered in Delaware, USA (File Number: 10814234). See [Corporate and regulatory positioning](/security/corporate-and-regulatory).
+* **Audits**: Full third-party security assessment reports from OpenZeppelin and Trail of Bits are published at [Audit reports](/security/audit-reports) and [`https://blackquantlabs.com/audits`](https://blackquantlabs.com/audits).
+* **Uptime & Health**: Real-time status monitoring is available at `/api/health`.
+* **Contracts**: On-chain smart contract foundations are open source at [github.com/Blackquant-labs/blackquant-contract](https://github.com/Blackquant-labs/blackquant-contract).
 
 <Warning>
-BlackQuant is trading infrastructure, not investment advice. Nothing in this documentation is a recommendation to buy or sell any asset, and no past measurement in the platform predicts a future one. Read [Reading the numbers honestly](/platform/signal-engine#reading-the-numbers-honestly) before drawing conclusions from any win rate on the dashboard.
+BlackQuant is algorithmic execution infrastructure, not investment advice. Nothing in this documentation is a recommendation to buy or sell any asset, and no historical observation guarantees future performance. Read [Reading the numbers honestly](/platform/signal-engine#reading-the-numbers-honestly) before evaluating strategy statistics.
 </Warning>

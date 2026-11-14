@@ -1,104 +1,102 @@
 ---
 title: "Troubleshooting"
-description: "Specific failures and the specific fix for each."
+description: "Specific failures and the specific fixes for each issue."
 ---
-## Deposit states
 
-| State | Cause | What to do |
+## Deposit issues and states
+
+| State | Root Cause | Recommended Action |
 | --- | --- | --- |
-| `WAITING` longer than expected | Wallet has not broadcast, or is queuing | Check your wallet's outgoing transaction |
-| `CONFIRMING` | Normal — confirmations accruing | Wait. Thresholds range from 1 (XRP) to 32 (SOL) |
-| `PARTIALLY_PAID` | Less arrived than expected | [Help Desk](/platform/knowledge-and-help) with the transaction hash |
-| `FAILED` | Transfer did not complete | Check your wallet — funds usually never left |
-| `EXPIRED` | Window closed before arrival | Request a **new** address. Do not reuse the old one |
-| `CONFIRMED` but balance unchanged | Callback lag | Wait a few minutes, then contact support |
+| `WAITING` prolonged | External wallet has not broadcasted transaction | Check your sending wallet transaction history and mempool status |
+| `CONFIRMING` | Normal: block confirmations accumulating | Allow native blockchain validators to finalize blocks (1 on XRP to 32 on SOL) |
+| `PARTIALLY_PAID` | Transfer amount falls below required invoice | Contact [Help Desk](/platform/knowledge-and-help) with the transaction hash |
+| `FAILED` | Transaction dropped from mempool or reverted | Check your external wallet: assets typically remained unspent |
+| `EXPIRED` | Payment window elapsed prior to transfer | Generate a **new** deposit address; do not broadcast to expired addresses |
+| `CONFIRMED` but balance unchanged | Gateway webhook latency | Allow a few minutes for callback synchronization, then open a support ticket |
 
-### Nothing appears at all
+### Deposit not detected on-chain
 
-1. Confirm you sent on the **network shown on the deposit page**, not merely the right asset.
-2. Confirm the amount was above the **minimum**.
-3. Confirm any required **memo / extra id** was included.
-4. Check the transaction hash on a block explorer.
+1. Confirm that you broadcasted on the **exact native network shown on the deposit page**.
+2. Confirm the transaction amount exceeded the stated **minimum threshold**.
+3. Confirm that required **memos or destination tags** were correctly attached.
+4. Locate the transaction hash on a public block explorer to confirm network broadcast.
 
 <Danger>
-If you sent over the wrong network, the funds are not recoverable. Nothing in the support process changes that.
+Funds broadcast over incorrect or unsupported blockchain networks cannot be recovered by BlackQuant, payment gateways, or network validators.
 </Danger>
 
-## Sign-in
+## Authentication & sign-in issues
 
 ### "Something went wrong on our end"
 
-Generic auth failure. In order of likelihood:
+This represents a generic authentication failure. The most common causes:
+1. **Incorrect password**: Verify capitalization and character entry.
+2. **Account created via GitHub OAuth**: Accounts created with GitHub do not have a password set. Authenticate using the GitHub button, or set a password via **Reset Credentials**.
+3. **Invalid or expired 2FA token**: Ensure device clock sync is enabled.
+4. **Stale browser session**: Clear cookies for the domain and retry.
 
-1. **Wrong password.**
-2. **The account has no password** — it was created via GitHub. Use the GitHub button, or add a password through **Reset Credentials**.
-3. **Wrong or expired 2FA code** — see below.
-4. **A stale session cookie.** Clear cookies for the site and retry.
+Authentication errors are intentionally uniform to prevent brute-force email enumeration.
 
-All of these fail identically on purpose, so the form cannot be used to enumerate accounts.
+### 2FA codes repeatedly rejected
 
-### 2FA codes always rejected
+Almost always caused by local device clock drift. Verification allows **one step of clock skew** (±30 seconds). Enable automatic network time synchronization on your mobile device.
 
-Almost always a device clock. Codes are accepted with **one step** of skew either side — about thirty seconds. Turn on automatic time synchronisation.
+If the clock is synchronized and codes still fail, authenticate using an unused single-use recovery code, then re-enroll your authenticator app under **2FA / Auth Guard**.
 
-If the clock is right, use a recovery code, then disable and re-enrol.
+### Session expired unexpectedly
 
-### Signed out sooner than expected
+If "Remember me" is left unchecked, sessions expire after **24 hours**. When checked, sessions persist for 30 days.
 
-"Remember me" unticked means a **24-hour** session, not "until I close the tab". Ticked is 30 days.
+## Subscription & add-on purchase issues
 
-### Signed out unexpectedly, or stuck on the sign-in screen
+| Message | Meaning | Resolution |
+| --- | --- | --- |
+| *"That subscription is already active."* | Plan tier is already active | Wait for current term to expire, or upgrade to a higher tier |
+| *"You already own that."* | Permanent add-on already owned | Add-ons are permanent and do not require repurchasing |
+| *"That item isn't available."* | Deprecated item identifier | Refresh catalog view |
+| Insufficient balance | Balance below required cost | Deposit funds or complete direct crypto checkout |
 
-A stale session cookie. One page load normally clears it by itself. If it persists, clear cookies for the site and sign in again.
+## Smart Executors & Positions
 
-## Purchases
+| Issue | Explanation | Action |
+| --- | --- | --- |
+| Executor shows Stopped / Paused | Staking cycle was paused manually | Click the **Restart** button in the executor header to resume |
+| Principal not in available balance | Staking capital is held during active run | Principal and accumulated net yield return to available balance when the executor completes or is stopped |
+| Compounding mode adjustment | Reinvest vs Cash payout | Toggle the Compounding Mode switch on the Yield Farmer dashboard at any time |
 
-| Message | Meaning |
+## Identity verification issues
+
+| Rejection Reason | Recommended Solution |
 | --- | --- |
-| *"That subscription is already active."* | You hold it. Wait for the term, or buy a different tier |
-| *"You already own that."* | Add-ons are permanent — there is nothing to re-buy |
-| *"That item isn't available."* | Unknown item id |
-| Insufficient balance | Top up, or use crypto checkout |
+| Document corners cropped | Place document on a flat surface with ample margin on all sides |
+| Reflection / Glare | Move away from direct overhead lighting on laminated IDs |
+| Blurry or illegible text | Ensure camera focus is sharp before capturing |
+| Expired document | Provide a valid, unexpired government-issued ID |
+| Incomplete sides | Submit both front and reverse sides for licenses and ID cards |
+| File size limit exceeded | Keep image under 8 MB (JPEG, PNG, or WebP) |
 
-### Checkout did not grant anything
+Rejections are not permanent: review the note provided and re-submit.
 
-1. Confirm the payment reached the required confirmations.
-2. Check the state on the deposit screen.
-3. Contact support with the transaction hash. **Do not send again.**
+## Signal Engine connectivity
 
-## Verification
+### "Not connected" indicator
 
-| Rejection | Fix |
+Indicates the external Signal Engine feed is offline or undergoing scheduled maintenance.
+
+This notice is intentional: the interface refuses to simulate artificial signals when live feeds are unavailable. Feeds reconnect automatically once upstream processes resume.
+
+### Feed timeout errors
+
+Signal requests enforce a **5-second timeout**. If the feed pauses, refresh the browser window or check `/api/health`.
+
+## Referral tracking inquiries
+
+| Symptom | Cause |
 | --- | --- |
-| Corners not visible | Photograph the whole document flat, with margin |
-| Glare | Diffuse light; avoid direct overhead light on laminate |
-| Illegible text | Fill the frame; do not upscale a small crop |
-| Expired document | Use a current one |
-| Wrong number of sides | Passport 1; licence and ID card 2 |
-| File too large | 8 MB max; JPEG, PNG or WebP |
+| Referral not attributed | Attributions use a 30-day cookie window: registration may have occurred after cookie expiration or across different browsers |
+| Downstream member visible but $0 commission | Commissions are awarded exclusively on **purchases**, never on deposits |
+| Commission lower than expected | Tier 1 awards 5% and Tier 2 awards 2% of qualifying purchase prices |
 
-A rejection is not final — fix the specific issue named in the note and resubmit.
+## Escalating to support
 
-## Signal engine
-
-### "Not connected"
-
-The engine is not currently reachable. This is a deliberate message rather than a fallback to sample data, so you can tell a missing engine from a working one.
-
-Nothing to do at your end — the live feed returns when the engine does.
-
-### The feed stalls
-
-Requests time out after **5 seconds**. Reload; if it persists the engine is likely down. Check `/api/health` and read `checks.signalEngine.status`.
-
-## Referrals
-
-| Symptom | Explanation |
-| --- | --- |
-| Referral not credited | The cookie is 30 days — they may have signed up after it lapsed, or cleared cookies, or used a different browser |
-| Referral shows but no commission | Commission is paid on **purchases**, never deposits |
-| Commission smaller than expected | Tier 1 is 5%, Tier 2 is 2%, on the purchase price |
-
-## Getting help
-
-Include the transaction hash, the asset **and network**, the deposit state, and what you expected versus what happened. See [Knowledge Base & Help Desk](/platform/knowledge-and-help).
+When opening a support request, include your blockchain transaction hash, cryptocurrency asset and network, deposit state, and screenshots where applicable. See [Knowledge Base & Help Desk](/platform/knowledge-and-help).

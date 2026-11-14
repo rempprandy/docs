@@ -59,6 +59,7 @@
         "group": "Security",
         "pages": [
           "security/custody-model",
+          "security/corporate-and-regulatory",
           "security/two-factor-authentication",
           "security/account-recovery",
           "security/audit-reports",

@@ -1,103 +1,132 @@
 ---
 title: "FAQ"
-description: "The questions that come up most, answered directly."
+description: "Frequently asked questions about BlackQuant features, corporate entity, security, and execution."
 ---
-## Account
 
+## Corporate, Legal & Regulatory
+<AccordionGroup>
+<Accordion title="What legal entity operates BlackQuant?">
+BlackQuant is owned and operated by **BlackQuant Labs LLC**, a Limited Liability Company registered in the State of Delaware, United States (Filing Number: 10814234, SR: 20264777510, formed October 22, 2026). Executive management is headed by Pawel Klimczuk. See [Corporate and regulatory positioning](/security/corporate-and-regulatory).
+</Accordion>
+
+<Accordion title="What is BlackQuant's regulatory classification?">
+BlackQuant operates as non-custodial financial technology and execution infrastructure. The platform does not take custody of user assets, pool customer funds, or operate as a centralized exchange. Users retain sole ownership of their self-custodied wallets and deploy capital into audited smart contract vaults.
+
+BlackQuant Labs LLC maintains corporate compliance in Delaware and conducts ongoing regulatory reviews across the United Kingdom and Europe, including active alignment with the European Union's **MiCA (Markets in Crypto-Assets)** regulatory framework.
+</Accordion>
+
+<Accordion title="Where can I access independent security audit reports?">
+Full, unedited security audit reports from **OpenZeppelin** and **Trail of Bits** are published at [https://blackquantlabs.com/audits](https://blackquantlabs.com/audits) and [`/audits`](/audits). A third independent smart contract audit covering our proprietary application execution router is currently in final review and will be published upon conclusion. Each audit includes both a technical specification and a plain-English summary. See [Audit reports](/security/audit-reports).
+</Accordion>
+</AccordionGroup>
+## Account & Security
 <AccordionGroup>
 <Accordion title="Do I need to verify my identity to use the platform?">
-Only to withdraw. Deposits, purchases, signals and positions all work without it. Verification is worth doing early anyway — see [Verify your identity](/getting-started/verify-your-identity).
+Identity verification is only required when requesting capital withdrawals. Depositing funds, activating subscription plans, accessing signals, and running Smart Executors do not require upfront verification. However, completing verification early ensures seamless withdrawals later. See [Verify your identity](/getting-started/verify-your-identity).
 </Accordion>
 
-<Accordion title="I signed up with GitHub. Why won't my password work?">
-An account created through GitHub has no password. Sign-in fails identically to a wrong password rather than telling you the account exists — deliberately, so the form cannot be used to discover which addresses are registered. Add a password via **Personal → Reset Credentials**.
+<Accordion title="I signed up with GitHub. Why doesn't my password work?">
+Accounts created through GitHub authentication do not have a password set by default. The system returns an authentication failure to preserve security. You can set a password at any time via **Personal → Reset Credentials**.
 </Accordion>
 
-<Accordion title="Can I change who referred me?">
-No. The link is recorded at sign-up and is permanent.
+<Accordion title="Can I change my referral sponsor?">
+No. Referral links are permanently bound at the moment of account creation and cannot be transferred or modified.
 </Accordion>
 
 <Accordion title="Can I delete my account?">
-Yes — **My Profile → Delete account**. It cascades to your submissions and documents. Export your data first if you want a copy.
+Yes. Navigate to **My Profile → Delete account**. This permanently purges your personal profile, active sessions, and verification records. We recommend exporting your transaction history beforehand.
+</Accordion>
+
+<Accordion title="Can BlackQuant move or withdraw my funds?">
+No. For on-chain execution, smart contracts are granted permission to route trades or deposit into vetted yield vaults, but have no code path to withdraw funds to unauthorized addresses. Your USD dashboard balance is stored in an audited internal ledger for plan activations and staking allocations.
+</Accordion>
+
+<Accordion title="I lost access to my authenticator device and recovery codes.">
+Please contact the [Help Desk](/platform/knowledge-and-help). Manual identity verification will be required to confirm account ownership before restoring access.
+</Accordion>
+
+<Accordion title="Does BlackQuant support ever ask for my password or 2FA codes?">
+Never. Platform representatives will never request your password, 2FA codes, recovery keys, or wallet private keys. Anyone asking for these credentials is an impersonator.
 </Accordion>
 </AccordionGroup>
-
-## Money
-
+## Smart Executors & Strategies
 <AccordionGroup>
-<Accordion title="Is my account balance the same as my trading capital?">
-No, and the distinction matters. The account balance is a USD credit for buying plans and add-ons, and it **is** custodial. Your trading capital stays under your own key. See [The custody model](/security/custody-model#where-the-account-balance-fits).
+<Accordion title="What is the difference between Active Arbitrage and Protocol Yield?">
+BlackQuant provides two distinct execution suites:
+* **Active Arbitrage Suite (Liquidity Optimizer & MEV Arbitrage)**: High-frequency execution bots that actively enter and exit positions on decentralized exchange order books and AMM pools to capture cross-market spreads and rebalance liquidity ranges. MEV Arbitrage represents our senior HFT execution strategy.
+* **Automated Protocol Yield Suite (Yield Farmer)**: A passive capital allocation bot that stakes capital across vetted decentralized finance protocols (Aave, Kamino, Marinade, Curve), harvesting and restaking rewards on automated 5-minute epochs.
 </Accordion>
 
-<Accordion title="I sent an asset on the wrong network. Can it be recovered?">
-No. Not by BlackQuant, not by the processor, not by the chain. This is why the deposit page fixes the network per asset rather than offering a picker.
+<Accordion title="How does the Yield Farmer work and what returns does it generate?">
+The Yield Farmer distributes staked capital across four audited decentralized protocols: Aave v3 Prime on Base (lending), Kamino Automated Yield on Solana (concentrated liquidity), Marinade & Jito on Solana (liquid staking), and Curve Stability Pool on Arbitrum (stable AMM).
+
+It operates on continuous 5-minute compounding epochs (288 cycles per day), targeting daily yields between 0.1% and 0.3% (blended 5.2% to 7.4% APY). Staked capital is safeguarded by non-custodial smart contracts audited by OpenZeppelin and Trail of Bits with cryptographic reserve verification.
 </Accordion>
 
-<Accordion title="My deposit confirmed on-chain but my balance hasn't changed.">
-Crediting follows the signed callback, which can lag final confirmation slightly. If it persists, see [Troubleshooting](/resources/troubleshooting#deposit-states).
+<Accordion title="Which subscription tier unlocks each Smart Executor?">
+* **Starter ($29/month)**: Unlocks the Protocol Yield Suite (Yield Farmer) with 1 concurrent execution slot and $1,000 to $10,000 staking capacity.
+* **Growth ($79/month)**: Unlocks the Active Arbitrage Suite (Liquidity Optimizer) alongside Yield Farmer, supporting up to 5 concurrent executors and $50,000 staking capacity.
+* **Elite ($199/month)**: Unlocks the complete suite including MEV Arbitrage, with unlimited execution slots and up to $250,000 staking capacity.
 </Accordion>
 
-<Accordion title="Why is there a minimum deposit?">
-Below it, network fees make the transfer uneconomic to credit.
+<Accordion title="Can I switch between auto-compounding and daily payouts?">
+Yes. The Yield Farmer dashboard includes an instant Compounding Mode toggle. You can choose to automatically reinvest harvested yield back into your principal to maximize compound growth, or receive daily cash earnings directly credited to your available USD account balance.
+</Accordion>
+
+<Accordion title="What is the automated fail-safe protection on Smart Executors?">
+Smart Executors operate under delegated session keys (ERC-4337) with strict user-defined risk limits. If an out-of-band market anomaly occurs (such as abnormal pool slippage, sudden liquidity dry-up, or unwhitelisted pair rebalancing), execution halts immediately and requires explicit one-click user re-authorization.
 </Accordion>
 </AccordionGroup>
-
-## Plans
-
+## Deposits & Treasury
 <AccordionGroup>
-<Accordion title="Do plans renew automatically?">
-No. A plan is a single fixed term — 30 or 365 days. Nothing recurs, because there is no stored payment method to charge. When it lapses you buy again.
+<Accordion title="Is my USD account balance the same as my decentralized wallet capital?">
+No. Your USD account balance is an internal ledger balance used to activate plans, purchase permanent add-ons, or stake into Smart Executors. Decentralized trading capital resides on-chain under audited smart contract rules. See [The custody model](/security/custody-model).
 </Accordion>
 
-<Accordion title="Can I upgrade mid-term?">
-You can buy a different tier. You cannot buy the tier you currently hold — that is refused rather than silently overwriting your term.
+<Accordion title="I transferred funds on the wrong blockchain network. Can they be recovered?">
+Transactions sent over unsupported or incorrect networks cannot be recovered by BlackQuant, payment gateways, or blockchain validators. To prevent this, our deposit interface assigns fixed networks per asset rather than using generic dropdowns.
 </Accordion>
 
-<Accordion title="What happens when my plan expires?">
-The entitlement stops. Balance, deposits, referral earnings and verification are unaffected. Entitlements are checked per request, so expiry takes effect immediately rather than at your next sign-in.
+<Accordion title="My deposit confirmed on-chain but my balance has not updated.">
+Ledger crediting occurs as soon as the cryptographically signed webhook callback is verified. Occasionally, network propagation delays between validators and gateways can take a few minutes. Check [Troubleshooting](/troubleshooting#deposit-states) for detailed state descriptions.
 </Accordion>
 
-<Accordion title="Is annual actually cheaper?">
-Yes — about 20% across every tier. Starter saves $72/year, Growth $192, Elite $480. See [Plans and pricing](/billing/plans-and-pricing).
+<Accordion title="Why is there a minimum deposit requirement?">
+Minimum thresholds ensure that transaction sizes remain economically viable relative to underlying blockchain gas fees and payment gateway processing costs.
 </Accordion>
 </AccordionGroup>
-
-## Signals
-
+## Plans & Billing
 <AccordionGroup>
-<Accordion title="Why does a strategy show no win rate?">
-Nothing has resolved yet. Unmeasured rates are published as `null`, never as 0% — "not measured" and "measured at zero" are different claims and only one is an indictment.
+<Accordion title="Do subscription plans renew automatically?">
+No. Plans operate on fixed subscription terms (30 days for monthly, 365 days for annual). We do not store payment card information or enforce automatic renewals. You choose when to renew.
 </Accordion>
 
-<Accordion title="What does `75% [45, 93]` mean?">
-The measured rate is 75%, and the true rate lies between 45% and 93% with 90% probability. A wide interval means very few resolved samples. Compare it with `75% [72, 78]` — same headline, vastly different evidence. See [Reading the numbers honestly](/platform/signal-engine#reading-the-numbers-honestly).
+<Accordion title="Can I upgrade my plan before my term ends?">
+Yes. You can upgrade to a higher tier at any time. The upgrade activates immediately and provisions your new Smart Executor limits and signal capacity. A fresh term begins upon upgrade.
 </Accordion>
 
-<Accordion title="Does the signal engine trade for me?">
-No. It cannot. No API it exposes can place an order — the separation is structural. It measures and publishes; you act.
+<Accordion title="What happens when my subscription plan expires?">
+When a plan reaches its expiration date, tier-specific entitlements stop. Your account balance, deposited funds, referral earnings, and verification status remain intact. You can renew at any time.
 </Accordion>
 
-<Accordion title="What is a &quot;declared&quot; rate?">
-A claim a strategy makes about itself, never a result. It is labelled as a claim and is never promoted into a measurement no matter how long it sits there.
+<Accordion title="Is annual billing more cost-effective than monthly?">
+Yes. Annual plans provide approximately 20% savings across all tiers: Starter saves $72 annually, Growth saves $192 annually, and Elite saves $480 annually. See [Plans and pricing](/billing/plans-and-pricing).
 </Accordion>
 </AccordionGroup>
-
-## Security
-
+## Signals & Quantitative Analytics
 <AccordionGroup>
-<Accordion title="Can BlackQuant move my funds?">
-Not your trading capital — the contracts are granted execution permission and never withdrawal permission. Your **account balance** is a different matter: that is a platform balance and is custodial.
+<Accordion title="Why does a newly listed strategy display null instead of a win rate?">
+Strategies display `null` until their initial trades resolve. BlackQuant never substitutes unmeasured strategies with 0%, ensuring untested algorithms are not confused with failing ones.
 </Accordion>
 
-<Accordion title="I've lost my 2FA device and my recovery codes.">
-Contact the [Help Desk](/platform/knowledge-and-help). Identity verification will be part of that conversation.
+<Accordion title="What does a credible interval like 75% [45, 93] mean?">
+It indicates that the historical observed win rate is 75%, and there is 90% statistical probability that the true long-term rate falls between 45% and 93%. A broad interval indicates early sample sizes, whereas a narrow interval (such as `75% [72, 78]`) reflects high statistical confidence. See [Reading the numbers honestly](/platform/signal-engine#reading-the-numbers-honestly).
 </Accordion>
 
-<Accordion title="Does support ever ask for my password or codes?">
-Never. Anyone who does is not support.
+<Accordion title="Does the Signal Engine trade autonomously without user configuration?">
+No. The Signal Engine is architecturally separated from order placement. It measures feeds and publishes statistical insights. Trades only execute when you configure manual trades or launch an authorized Smart Executor.
 </Accordion>
 </AccordionGroup>
+## Still have questions?
 
-## Still stuck?
-
-[Troubleshooting](/resources/troubleshooting) covers specific failures with specific fixes.
+Consult [Troubleshooting](/troubleshooting) for technical error resolutions, or contact our support team through the [Help Desk](/platform/knowledge-and-help).
