@@ -53,12 +53,13 @@ flowchart TB
         SUB[Signal Plan Tier]
         EXE[Smart Executor Control]
     end
-    ST -.Live feeds.-> Account
-    Account -.User instructs.-> Execute
-    Execute -.On-chain settlement.-> Account
+    ST -.Signal telemetry.-> EXE
+    Account -.User enables agent.-> EXE
+    EXE -.Autonomous order routing & compounding.-> Execute
+    Execute -.On-chain settlement & yield.-> Account
 ```
 
-The dashed lines represent essential security boundaries. The signal engine publishes intelligence to the dashboard; it cannot trigger smart contracts on its own. You maintain full authority over execution.
+The dashed lines represent essential security boundaries. The signal engine publishes intelligence to the executors and dashboard; it cannot move funds on its own. The user enables the Smart Executor with a single click, and the agent carries out execution decisions autonomously 24/7 within predefined risk parameters.
 
 ## Commercial positioning and strategy tiers
 
@@ -72,7 +73,7 @@ BlackQuant is built to accommodate varying participant profiles and risk objecti
 
 **It is not a custodial exchange.** BlackQuant does not hold your assets in an opaque centralized wallet. Your USD dashboard balance is a transparent ledger for funding subscriptions and allocations.
 
-**It is not a discretionary hedge fund.** Nobody at BlackQuant makes subjective investment decisions on your behalf. Strategies operate strictly according to algorithmic rules and parameters you define.
+**It is not manual trading.** You do not need to analyze order books, place buy/sell orders, or time market entries. The Smart Executor's algorithmic models make all execution, routing, sizing, entry, exit, and compounding decisions autonomously 24/7 once enabled.
 
 **It is not an unverified signal channel.** Every strategy metric is anchored by historical resolution, statistical credible intervals, and verifiable on-chain settlement.
 

@@ -1,8 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 430 100" width="430" height="100" fill="none" role="img" aria-label="BlackQuant">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" width="400" height="100" fill="none" role="img" aria-label="BlackQuant">
   <title>BlackQuant wordmark</title>
-  <g stroke="#00e5aa" stroke-width="8">
-    <circle cx="48" cy="48" r="30"/>
-    <line x1="60" y1="60" x2="82" y2="82" stroke-linecap="round"/>
+  <defs>
+    <g id="bq-b">
+      <path d="M16.5 11v26" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M13.75 13.75h9.75a4.75 4.75 0 0 1 0 9.5h-7" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M16.5 23.25h9.5a5.5 5.5 0 0 1 0 11H13.75" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <clipPath id="base-light"><polygon points="0,0 48,0 48,10.4 10.4,48 0,48"/></clipPath>
+    <clipPath id="cut-light"><polygon points="48,13 48,48 13,48"/></clipPath>
+  </defs>
+  
+  <rect x="12" y="14" width="72" height="72" rx="19.5" fill="#00e5aa"/>
+  <g transform="translate(12, 14) scale(1.5)">
+    <g transform="translate(-1 0)" fill="none" stroke="#0a0a0a" stroke-width="5.5">
+      <use href="#bq-b" clip-path="url(#base-light)"/>
+      <g transform="translate(2.2 -2.1)"><use href="#bq-b" clip-path="url(#cut-light)"/></g>
+    </g>
   </g>
-  <text x="112" y="67" fill="#09090b" font-family="Satoshi, 'Satoshi Variable', Inter, -apple-system, system-ui, sans-serif" font-size="54" font-weight="700" letter-spacing="-1.5">BlackQuant</text>
+  
+  <text x="106" y="68" fill="#09090b" font-family="Satoshi, 'Satoshi Variable', Inter, -apple-system, system-ui, sans-serif" font-size="52" font-weight="900" letter-spacing="-1.5">Black<tspan fill="#00b887">Quant</tspan></text>
 </svg>

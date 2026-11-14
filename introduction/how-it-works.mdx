@@ -11,7 +11,8 @@ This guide traces capital and execution through each stage of the BlackQuant pla
 sequenceDiagram
     participant U as You
     participant NP as Payment Gateway
-    participant BQ as BlackQuant
+    participant BQ as BlackQuant Core
+    participant SE as Smart Executor Agent
     participant CH as On-Chain Settlement
 
     U->>BQ: Request deposit address
@@ -23,9 +24,12 @@ sequenceDiagram
     NP->>BQ: Cryptographically signed webhook
     BQ->>BQ: Verify signature and credit account ledger
     BQ-->>U: Live balance update via SSE stream
-    U->>BQ: Activate plan or Smart Executor
-    BQ->>BQ: Debit balance and provision execution runtime
-    BQ->>CH: Route to DEX pools or audited yield vaults
+    U->>SE: Enable Smart Executor & allocate capital
+    Note over SE,CH: Autonomous 24/7 Execution: Smart Executor decides all routing & timing
+    SE->>CH: Autonomous mempool routing & range rebalancing
+    SE->>CH: Automated 5-min harvest epochs & compounding
+    CH-->>SE: On-chain trade settlements & harvest confirmations
+    SE-->>U: Live telemetry stream, P&L, & yield accrual
 ```
 
 ## Step by step
@@ -52,7 +56,7 @@ Crediting creates an immutable **ledger entry**. Your account balance is derived
 
 ### 4. Subscription and entitlement activation
 
-A [signal plan](/billing/plans-and-pricing) provides a structured term: 30 days for monthly subscriptions or 365 days for annual billing. Optional [add-ons](/billing/add-ons) carry permanent entitlements with no renewal requirement.
+A [signal plan](/billing/plans-and-pricing) provides a structured term: 30 days for monthly subscriptions or 365 days for annual billing. Optional [add-ons](/billing/add-ons) carry permanent entitlements with no renewal requirement. Activating a plan unlocks the autonomous Smart Executors for your account tier.
 
 Pricing is looked up server-side from immutable item identifiers, ensuring pricing integrity cannot be modified in the browser.
 
@@ -64,12 +68,14 @@ When an account was referred by an existing member, commissions are distributed 
 Commissions are awarded strictly on verified platform purchases, never on account deposits. Deposits represent personal capital eligible for withdrawal, whereas purchases represent platform revenue. Learn more in [Referral Hub](/platform/referral-hub).
 </Info>
 
-### 6. Strategy execution and on-chain settlement
+### 6. Autonomous Smart Executor execution and on-chain settlement
 
-Once subscribed, you can configure and run **Smart Executors** across two execution suites:
+BlackQuant operates on a model of complete algorithmic autonomy: **the user does not make trade decisions, evaluate chart entries, or manage open positions.** Your role is strictly to select your strategy suite, configure your initial capital allocation, and enable the Smart Executor agent. The agent handles everything else.
 
-* **Active Arbitrage Suite**: Automated execution bots (Liquidity Optimizer and MEV Arbitrage) monitor decentralized liquidity pools, placing low-latency rebalancing transactions to capture price discrepancies between order books and AMMs.
-* **Automated Protocol Yield Suite**: The Yield Farmer bot allocates capital across audited decentralized vaults (including Aave, Kamino, Marinade, and Curve). It executes auto-harvesting and compounding cycles on fixed 5-minute epochs (288 epochs daily), allowing you to reinvest yield into principal or receive daily payouts with non-custodial cryptographic reserve verification.
+Once enabled, the Smart Executor operates 100% autonomously around the clock:
+* **Active Arbitrage Suite (Liquidity Optimizer & MEV Arbitrage)**: The Smart Executor continuously scans decentralized exchange mempools and liquidity pool books across supported networks. It automatically detects cross-venue price discrepancies, calculates optimal routing and slippage parameters, and submits multi-hop atomic transactions to capture arbitrage spreads without requiring manual intervention.
+* **Automated Protocol Yield Suite (Yield Farmer)**: The Smart Executor autonomously allocates capital into vetted non-custodial decentralized finance vaults (such as Aave, Kamino, Marinade, and Curve). Every 5 minutes (288 automated epochs per day), the bot executes automated harvest cycles, compounding rewards back into your staking principal or routing cash payouts to your account balance.
+* **Autonomous Risk Protection**: The Smart Executor continuously monitors liquidity health, execution slippage, and stop-loss boundaries. If anomalous market conditions appear, the agent's automated fail-safes pause execution to protect your principal.
 
 All positions, allocations, and compounding epochs are tracked in [Positions](/platform/positions) and verifiable on block explorers.
 

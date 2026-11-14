@@ -45,13 +45,20 @@ BlackQuant provides two dedicated operational views depending on your executor's
 * **Telemetry Daemon & Epoch Ledger**: Provides transparent logs of oracle price syncs, collateral health checks, and on-chain harvest settlements.
 * **Protected Principal Floor**: Staking principal remains preserved with monotonic yield accumulation targeting 0.1% to 0.3% daily (~5.2% to 7.4% blended APY).
 
-## Opening manual positions
+## Autonomous execution and agent lifecycle
 
-Use the **Trade** button in the dashboard header to open manual positions. You specify the trading pair, trade direction (buy/sell), and position sizing.
+BlackQuant is built entirely around autonomous algorithmic execution: **the platform features no manual trading, chart timing, or manual order placement.** Sizing calculations, pair selections, order routing, and exit timings are decided entirely by the Smart Executor based on quantitative statistical models.
 
-<Warning>
-A signal represents a quantified observation, not financial advice. The [Signal Engine](/platform/signal-engine) publishes empirical probability intervals; sizing decisions and execution choices remain yours. Always evaluate strategy credible intervals before deploying capital.
-</Warning>
+### How to run a Smart Executor
+
+1. **Allocate capital**: Select your strategy suite (Yield Farmer, Liquidity Optimizer, or MEV Arbitrage) and specify the starting capital balance you wish to deploy.
+2. **Enable the agent**: Click **Start Executor**. The Smart Executor initializes on live market prices with target execution win rate parameters (e.g. 80% target execution win rate).
+3. **Autonomous 24/7 execution**: The Smart Executor actively monitors order books and liquidity pools, detects optimal routes, executes systematic trades, rebalances liquidity ranges, and carries out 5-minute compounding harvest epochs.
+4. **Live telemetry and control**: Inspect live fills, open positions, and harvest records in real time on this screen. You retain full non-custodial authority and can pause or stop the Smart Executor with a single click at any time, returning all available equity immediately to your balance.
+
+<Info>
+Smart Executors operate with mathematical discipline within your defined risk parameters. You do not need to sit at a screen, watch live price candles, or manually approve individual trade entries: the agent executes autonomously around the clock.
+</Info>
 
 ## Reading the equity curve
 
