@@ -13,8 +13,8 @@ All prices are in USD. Subscriptions are billed once per term from your account 
 
 | Period | Price | Term | Item ID |
 | --- | --- | --- | --- |
-| Monthly | $29 | 30 days | `plan-starter-monthly` |
-| Annual | $276 | 365 days | `plan-starter-annual` |
+| Monthly | Set in Backend (Default: $29) | 30 days | `plan-starter-monthly` |
+| Annual | Set in Backend (Default: $276) | 365 days | `plan-starter-annual` |
 
 * Up to 10 signals per day
 * 1 active position / smart executor
@@ -28,8 +28,8 @@ All prices are in USD. Subscriptions are billed once per term from your account 
 
 | Period | Price | Term | Item ID |
 | --- | --- | --- | --- |
-| Monthly | $79 | 30 days | `plan-growth-monthly` |
-| Annual | $756 | 365 days | `plan-growth-annual` |
+| Monthly | Set in Backend (Default: $79) | 30 days | `plan-growth-monthly` |
+| Annual | Set in Backend (Default: $756) | 365 days | `plan-growth-annual` |
 
 * Up to 50 signals per day
 * 5 active concurrent positions / smart executors
@@ -44,8 +44,8 @@ All prices are in USD. Subscriptions are billed once per term from your account 
 
 | Period | Price | Term | Item ID |
 | --- | --- | --- | --- |
-| Monthly | $199 | 30 days | `plan-elite-monthly` |
-| Annual | $1,908 | 365 days | `plan-elite-annual` |
+| Monthly | Set in Backend (Default: $199) | 30 days | `plan-elite-monthly` |
+| Annual | Set in Backend (Default: $1,908) | 365 days | `plan-elite-annual` |
 
 * Unlimited signals per day
 * Unlimited concurrent positions / smart executors
@@ -59,6 +59,8 @@ All prices are in USD. Subscriptions are billed once per term from your account 
 
 | Capability | Starter | Growth | Elite |
 | --- | --- | --- | --- |
+| Monthly Price | Set in Backend (Default: $29) | Set in Backend (Default: $79) | Set in Backend (Default: $199) |
+| Annual Price | Set in Backend (Default: $276) | Set in Backend (Default: $756) | Set in Backend (Default: $1,908) |
 | Concurrent Executors | 1 active | 5 active | Unlimited |
 | Yield Farmer (Protocol Yield) | Included | Included | Included |
 | Liquidity Optimizer (Active Arbitrage) | Locked | Unlocked | Unlocked |
@@ -68,10 +70,10 @@ All prices are in USD. Subscriptions are billed once per term from your account 
 
 ## Server-side price verification
 
-Plan prices are stored securely in the backend catalog. When you activate a subscription, the client submits an immutable **item ID** and the server verifies the current cost directly from the database.
+Plan prices and operational parameters are defined dynamically in the backend catalog (`plans.catalogue`) and database. When an account activates or renews a subscription, the client submits an immutable **item ID** (`plan-starter-monthly`, `plan-growth-monthly`, etc.). The backend verifies the price directly against the server-side catalog before executing the balance debit or generating an on-chain crypto checkout invoice.
 
 <Info>
-Prices cannot be altered on the client side. The browser never submits a numerical payment amount, preserving transaction integrity.
+Prices and capital constraints are never accepted from the client browser. All checkout totals and term durations are enforced server-side by backend validation, preserving institutional integrity.
 </Info>
 
 ## Subscriptions versus permanent add-ons
