@@ -48,11 +48,11 @@ Capital onboarding is streamlined through dedicated payment rails. On [Fund your
 
 ### 2. Deterministic block confirmation schedule
 
-Transactions transition deterministically through verifiable on-chain states: `WAITING` → `CONFIRMING` → `CONFIRMED`. Block confirmation thresholds are calibrated to the underlying consensus model of each network, from 1 block on the XRP Ledger to 32 confirmations on Solana, ensuring complete finality before ledger crediting. See [Fund your account](/getting-started/fund-your-account#supported-assets).
+Transactions transition deterministically through verifiable on-chain states: `WAITING` → `CONFIRMING` → `CONFIRMED`. Block confirmation thresholds are dynamically configured to the underlying consensus model of each network, from 1 block on the XRP Ledger to 32 confirmations on Solana, ensuring complete finality before ledger crediting. See [Fund your account](/getting-started/fund-your-account#supported-assets).
 
 ### 3. Cryptographically verified ledger crediting
 
-Incoming transfers trigger an ed25519-signed callback from our payment gateway infrastructure. BlackQuant validates the cryptographic signature prior to executing ledger state changes; invalid or tampered webhooks are rejected at the edge. See [Webhooks](/developers/webhooks).
+Incoming transfers trigger an HMAC-signed callback from our payment gateway infrastructure. BlackQuant validates the cryptographic signature prior to executing ledger state changes; invalid or tampered webhooks are rejected at the edge. See [Webhooks](/developers/webhooks).
 
 Every credit creates an immutable **ledger entry**. Account balances are derived mathematically as the sum of verifiable ledger events rather than mutable database flags, providing a complete historical audit trail.
 
@@ -60,7 +60,7 @@ Every credit creates an immutable **ledger entry**. Account balances are derived
 
 Subscribing to a [signal plan](/billing/plans-and-pricing) provisions dedicated execution runtimes. Term options span 30-day or 365-day access, while permanent [add-ons](/billing/add-ons) expand concurrent execution capacity and risk controls without renewal overhead.
 
-Activating a tier unlocks the autonomous Smart Executor runtimes calibrated to your selected risk profile and capital allocation.
+Activating a tier unlocks the autonomous Smart Executor runtimes tuned to your selected risk profile and capital allocation.
 
 ### 5. Transparent multi-tier affiliate settlement
 
@@ -95,7 +95,7 @@ All positions, allocations, and compounding epochs are tracked in [Positions](/p
 
 Trading capital remains strictly under your non-custodial ownership and control. When you choose to rebalance, reallocate, or exit, you can stop any Smart Executor with a single click to return capital to your unencumbered balance.
 
-Withdrawal requests are submitted through [Withdrawals](/platform/withdrawals). Capital payouts typically clear between **30 minutes and 24 hours**, depending on institutional liquidity epoch clearing, automated risk verification, and blockchain network finality:
+Withdrawal requests are submitted directly through [Withdrawals](/platform/withdrawals). Capital payouts typically clear between **30 minutes and 24 hours**, depending on institutional liquidity epoch clearing, automated risk verification, and blockchain network finality:
 
 * **Liquidity Epoch Clearing**: Because active capital is deployed across live decentralized liquidity pools and institutional yield vaults, the routing engine systematically unbinds liquidity during scheduled 5-minute epoch boundaries: preventing price impact, mitigating slippage, and preserving accumulated yield.
 * **Cryptographic Security Clearance**: Every payout request is authorized through multi-factor confirmation (email sign-off and 2FA authentication) and verified against our automated risk-boundary and proof-of-reserve reconciliation engine.
@@ -105,7 +105,7 @@ Withdrawal requests are submitted through [Withdrawals](/platform/withdrawals). 
 
 | Operational Stream | Protocol / Architecture | Institutional Function |
 | --- | --- | --- |
-| Deposit Confirmations | Server-Sent Events (`/api/deposit/stream`) | Microsecond block confirmation tracking without client polling |
+| Deposit Confirmations | Server-Sent Events (`/api/deposit/stream`) | Real-time block confirmation tracking without client polling |
 | Signal Telemetry Engine | Server-Sent Events (`/api/signal-engine/stream`) | Live liquidity telemetry, order book depth, and 90% credible intervals |
 | Protocol Yield Daemon | Automated epoch timer & WebSocket sync | 5-minute harvest cycle execution and real-time yield compounding |
 | Dynamic Account Ledger | Reactive event stream | Cryptographically derived balance state synchronized across nodes |

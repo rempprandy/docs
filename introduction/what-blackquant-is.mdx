@@ -40,7 +40,7 @@ The secure dashboard interface where you manage your USD balance, funding deposi
 flowchart TB
     subgraph Measure["Signal Engine: Market Analytics & Telemetry"]
         SE[On-Chain Trade Watcher]
-        ST[Calibrated Strategy Intervals]
+        ST[Empirical Strategy Intervals]
         SE --> ST
     end
     subgraph Execute["Execution Layer: Non-Custodial Smart Contracts"]

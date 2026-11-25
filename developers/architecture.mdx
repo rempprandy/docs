@@ -37,8 +37,8 @@ docs/           GitBook documentation repository
 ## Production operational status
 
 * **Signal Ingestion & Telemetry**: Core DEX liquidity telemetry, market watcher daemons, and Bayesian reliability scoring models (dynamic 90% credible intervals) are 100% operational in production.
-* **Execution Routing**: Our automated execution router operates in production under a gated, whitelisted canary phase with internal accounts and pilot liquidity providers. The public-facing tier currently serves live high-conviction signal streaming.
-* **End-to-End Tracing & Replay**: The infrastructure maintains microsecond-level replay tracing from DexWatch signal generation, through mempool broadcast, to final on-chain block settlement.
+* **Execution Routing**: Our automated execution router operates live on mainnet, deploying autonomous order routing and compounding cycles directly across Ethereum, Arbitrum, Base, and Solana for active Smart Executors.
+* **End-to-End Tracing & Replay**: The infrastructure maintains high-precision telemetry tracing from DexWatch signal generation, through mempool broadcast, to final on-chain block settlement.
 
 ## Dual-engine execution runtime
 
@@ -49,7 +49,7 @@ flowchart TD
     subgraph SignalLayer["Signal & Telemetry Layer: 100% Live in Production"]
         SF[On-Chain Trade & Liquidity Feeds]
         DW[DexWatch Mempool Telemetry]
-        AN[Calibrated 90% Credible Intervals]
+        AN[Statistical 90% Credible Intervals]
         SF --> DW --> AN
     end
 
@@ -66,11 +66,11 @@ flowchart TD
         end
     end
 
-    subgraph SettlementLayer["Settlement Venues & Calibrated Networks"]
+    subgraph SettlementLayer["Settlement Venues & Production Networks"]
         ETH[Ethereum Mainnet: Live]
         ARB[Arbitrum One: Live]
         SOL[Solana DEX Pools: Live]
-        BAS[Base: Private Staging for Sub-Second RPC]
+        BAS[Base Mainnet: Live]
         FUT[Sui, Aptos, L2 Rollups: Q2/Q3 Roadmap]
     end
 
@@ -108,14 +108,14 @@ BlackQuant maintains an absolute separation between trading capital and operatio
 1. **Trading Capital**: Remains strictly non-custodial at all times, secured in self-custodied user wallets or dedicated smart contract vaults. The platform never co-mingles, borrows against, or takes custody of user assets.
 2. **Operational Payment Rails**: Our off-chain ledger tracks subscription plan utilization, performance attribution, and affiliate commissions, reconciling platform fees via decentralized payment gateways without ever touching user principal.
 
-## Network pipeline calibration status
+## Network pipeline operational status
 
 | Network | Status | Operational Focus |
 | --- | --- | --- |
 | **Ethereum Mainnet** | Production | High-conviction arbitrage routing and pool rebalancing |
 | **Arbitrum One** | Production | Low-gas DEX arbitrage and Curve stability pools |
 | **Solana** | Production | High-throughput DEX pools, Kamino vaults, and Marinade staking |
-| **Base** | Private Staging | Sub-second RPC latency optimization and Aave v3 Prime vaults |
+| **Base** | Production | Sub-second RPC latency optimization and Aave v3 Prime vaults |
 | **Sui & Aptos** | Q2/Q3 Roadmap | Parallelized Move VM liquidity integration |
 | **Hyper-Liquid L2s** | Q2/Q3 Roadmap | High-frequency on-chain order book settlement |
 

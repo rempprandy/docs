@@ -4,6 +4,7 @@ description: "Frequently asked questions about BlackQuant features, corporate en
 ---
 
 ## Corporate, Legal & Regulatory
+
 <AccordionGroup>
 <Accordion title="What legal entity operates BlackQuant?">
 BlackQuant is owned and operated by **BlackQuant Labs LLC**, a Limited Liability Company registered in the State of Delaware, United States (Filing Number: 10814234, SR: 20264777510, formed October 22, 2026). Executive management is headed by Pawel Klimczuk. See [Corporate and regulatory positioning](/security/corporate-and-regulatory).
@@ -16,10 +17,11 @@ BlackQuant Labs LLC maintains corporate compliance in Delaware and conducts ongo
 </Accordion>
 
 <Accordion title="Where can I access independent security audit reports?">
-Full, unedited security audit reports from **OpenZeppelin** and **Trail of Bits** are published at [https://blackquantlabs.com/audits](https://blackquantlabs.com/audits) and [`/audits`](/security/audit-reports). A third independent smart contract audit covering our proprietary application execution router is currently in final review and will be published upon conclusion. Each audit includes both a technical specification and a plain-English summary. See [Audit reports](/security/audit-reports).
+Full, unedited security audit reports from **OpenZeppelin** and **Trail of Bits** are published at [https://blackquantlabs.com/audits](https://blackquantlabs.com/audits). A third independent smart contract audit covering our proprietary application execution router is currently in final review and will be published upon conclusion. Each audit includes both a technical specification and a plain-English summary. See [Audit reports](/security/audit-reports).
 </Accordion>
 </AccordionGroup>
 ## Account & Security
+
 <AccordionGroup>
 <Accordion title="Do I need to verify my identity to use the platform?">
 Identity verification is only required when requesting capital withdrawals. Depositing funds, activating subscription plans, accessing signals, and running Smart Executors do not require upfront verification. However, completing verification early ensures seamless withdrawals later. See [Verify your identity](/getting-started/verify-your-identity).
@@ -50,21 +52,22 @@ Never. Platform representatives will never request your password, 2FA codes, rec
 </Accordion>
 </AccordionGroup>
 ## Smart Executors & Strategies
+
 <AccordionGroup>
 <Accordion title="Do I need to manage trades or make market decisions manually?">
-No. BlackQuant is 100% automated algorithmic execution: the user does not choose trade directions, analyze candlestick charts, or place orders. You simply allocate your desired capital and enable the Smart Executor agent. The agent's calibrated quantitative models handle all market monitoring, entry timing, position sizing, route optimization, exit closures, and yield compounding autonomously around the clock.
+No. BlackQuant is 100% automated algorithmic execution: the user does not choose trade directions, analyze candlestick charts, or place orders. You simply allocate your desired capital and enable the Smart Executor agent. The agent's quantitative models handle all market monitoring, entry timing, position sizing, route optimization, exit closures, and yield compounding autonomously around the clock.
 </Accordion>
 
 <Accordion title="What is the difference between Active Arbitrage and Protocol Yield?">
 BlackQuant provides two distinct execution suites:
-* **Active Arbitrage Suite (Liquidity Optimizer & MEV Arbitrage)**: High-frequency execution bots that actively enter and exit positions on decentralized exchange order books and AMM pools to capture cross-market spreads and rebalance liquidity ranges. MEV Arbitrage represents our senior HFT execution strategy.
-* **Automated Protocol Yield Suite (Yield Farmer)**: A passive capital allocation bot that stakes capital across vetted decentralized finance protocols (Aave, Kamino, Marinade, Curve), harvesting and restaking rewards on automated 5-minute epochs.
+* **Active Arbitrage Suite (Liquidity Optimizer & MEV Arbitrage)**: High-frequency execution Smart Executors that actively enter and exit positions on decentralized exchange order books and AMM pools to capture cross-market spreads and rebalance liquidity ranges. MEV Arbitrage represents our senior HFT execution strategy.
+* **Automated Protocol Yield Suite (Yield Farmer)**: A passive capital allocation Smart Executor that stakes capital across vetted decentralized finance protocols (Aave, Kamino, Marinade, Curve), harvesting and restaking rewards on automated 5-minute epochs.
 </Accordion>
 
 <Accordion title="How does the Yield Farmer work and what returns does it generate?">
 The Yield Farmer distributes staked capital across four audited decentralized protocols: Aave v3 Prime on Base (lending), Kamino Automated Yield on Solana (concentrated liquidity), Marinade & Jito on Solana (liquid staking), and Curve Stability Pool on Arbitrum (stable AMM).
 
-It operates on continuous 5-minute compounding epochs (288 cycles per day), targeting daily yields between 0.1% and 0.3% (blended 5.2% to 7.4% APY). Staked capital is safeguarded by non-custodial smart contracts audited by OpenZeppelin and Trail of Bits with cryptographic reserve verification.
+It operates on continuous 5-minute compounding epochs (288 cycles per day), delivering daily yields between 0.1% and 0.3%. Staked capital is safeguarded by non-custodial smart contracts audited by OpenZeppelin and Trail of Bits with cryptographic reserve verification.
 </Accordion>
 
 <Accordion title="Which subscription tier unlocks each Smart Executor?">
@@ -82,6 +85,7 @@ Smart Executors operate under delegated session keys (ERC-4337) with strict user
 </Accordion>
 </AccordionGroup>
 ## Deposits & Treasury
+
 <AccordionGroup>
 <Accordion title="Is my USD account balance the same as my decentralized wallet capital?">
 No. Your USD account balance is an internal ledger balance used to activate plans, purchase permanent add-ons, or stake into Smart Executors. Decentralized trading capital resides on-chain under audited smart contract rules. See [The custody model](/security/custody-model).
@@ -100,6 +104,7 @@ Minimum thresholds ensure that transaction sizes remain economically viable rela
 </Accordion>
 </AccordionGroup>
 ## Plans & Billing
+
 <AccordionGroup>
 <Accordion title="Do subscription plans renew automatically?">
 No. Plans operate on fixed subscription terms (30 days for monthly, 365 days for annual). We do not store payment card information or enforce automatic renewals. You choose when to renew.
@@ -118,6 +123,7 @@ Yes. Annual plans provide approximately 20% savings across all tiers: Starter sa
 </Accordion>
 </AccordionGroup>
 ## Signals & Quantitative Analytics
+
 <AccordionGroup>
 <Accordion title="Why does a newly listed strategy display null instead of a win rate?">
 Strategies display `null` until their initial trades resolve. BlackQuant never substitutes unmeasured strategies with 0%, ensuring untested algorithms are not confused with failing ones.

@@ -3,7 +3,7 @@ title: "Audit reports"
 description: "Third-party security reviews, plain-English audit summaries, and smart contract verification."
 ---
 
-Security and mathematical correctness are fundamental to the BlackQuant infrastructure. Full unedited audit PDF reports can be examined at [`/audits`](/security/audit-reports) and at [https://blackquantlabs.com/audits](https://blackquantlabs.com/audits).
+Security and mathematical correctness are fundamental to the BlackQuant infrastructure. Full unedited audit PDF reports can be examined directly at [https://blackquantlabs.com/audits](https://blackquantlabs.com/audits).
 
 BlackQuant infrastructure references three independent security audits. Two comprehensive reports are published and accessible below, with the third independent engagement scheduled for publication upon completion.
 
@@ -25,19 +25,19 @@ To make security documentation accessible to all participants rather than only e
 * **What were the principal findings?** The review identified 1 medium-severity item and 1 low-severity observation concerning edge-case balance accounting and fee rounding. Zero critical or high-severity vulnerabilities were found.
 * **Have identified issues been resolved?** Yes. All findings were remediated and verified by the Trail of Bits team before production deployment.
 * **What remains outside the scope?** Off-chain server infrastructure, cloud deployment scripts, and external third-party decentralized exchange oracles were out of scope.
-* **What this means for your funds:** Confirms that capital deposited into trading vaults cannot be locked, trapped, or extracted by unauthorized parties. It validates that automated yield calculations and principal redemptions behave accurately under stress.
+* **What this means for your funds:** Validates that core vault accounting, balance checks, and redemption mechanics adhere to expected security specifications under evaluated conditions, substantially mitigating risks of unauthorized extraction or state corruption within audited modules.
 
 ### Technical Assessment Details
 
 | Parameter | Specification |
 | --- | --- |
 | **Auditing Firm** | Trail of Bits |
-| **Target System** | Trading Vault and Settlement System (`Lagoon-v0`) |
+| **Target System** | Trading Vault and Settlement System (`Vault-v0.6.0`) |
 | **Review Window** | April 20 to 24, 2026 (one engineer-week) |
 | **Report Publication** | May 11, 2026 |
 | **Identified Findings** | 1 medium, 1 low |
 | **Remediation Status** | 100% resolved and verified by auditors |
-| **Report Download** | [`/audits/trail-of-bits-lagoon-v0-2026-05.pdf`](/audits/trail-of-bits-lagoon-v0-2026-05.pdf) (969 KB) |
+| **Report Download** | [Trail of Bits Audit PDF](https://blackquantlabs.com/audits/trail-of-bits-vault-security-assessment-2026-05.pdf) (969 KB) |
 
 **Auditor Methodology:**
 Trail of Bits utilized manual code review alongside static analysis to evaluate deposit authorization, multi-token balance math, dynamic fee splits, and automated liquidation thresholds.
@@ -51,7 +51,7 @@ Trail of Bits utilized manual code review alongside static analysis to evaluate 
 * **What exactly was audited?** The foundational smart contract building blocks, including token transfer safety, access control permissions, reentrancy guards, and cross-chain messaging primitives.
 * **Who performed the audit, and when?** OpenZeppelin, conducted January 26 to February 5, 2026, and officially published on February 27, 2026.
 * **What were the principal findings?** Zero critical and zero high-severity issues. The review highlighted 2 medium-severity, 10 low-severity, and 5 informational observations related to parameter bounds and cross-chain messaging edge cases.
-* **Have identified issues been resolved?** Yes. 14 items were fully resolved and 2 were verified with approved operational mitigations.
+* **Have identified issues been resolved?** Yes. 15 items were fully resolved and 2 were verified with approved operational mitigations.
 * **What remains outside the scope?** Front-end web interfaces, user-side wallets, and third-party RPC endpoints were excluded.
 * **What this means for your funds:** Verifies that our foundational contracts prevent unauthorized administrative takeovers, enforce strict access controls, and guarantee that smart contract routes cannot execute arbitrary fund transfers.
 
@@ -64,8 +64,8 @@ Trail of Bits utilized manual code review alongside static analysis to evaluate 
 | **Review Window** | January 26 to February 5, 2026 |
 | **Report Publication** | February 27, 2026 |
 | **Identified Findings** | 0 critical, 0 high, 2 medium, 10 low, 5 notes |
-| **Remediation Status** | 18 findings addressed (14 resolved, 2 mitigated, verified) |
-| **Report Download** | [`/audits/openzeppelin-contracts-v5.6-2026-02.pdf`](/audits/openzeppelin-contracts-v5.6-2026-02.pdf) (369 KB) |
+| **Remediation Status** | 17 findings addressed (15 resolved, 2 mitigated with operational safeguards) |
+| **Report Download** | [OpenZeppelin Audit PDF](https://blackquantlabs.com/audits/openzeppelin-smart-contract-security-assessment-2026-02.pdf) (369 KB) |
 
 ---
 

@@ -23,7 +23,7 @@ Withdrawal requests typically clear between **30 minutes and 24 hours**, dependi
 **Why does capital settlement take between 30 minutes and 24 hours?**
 Trading capital in BlackQuant is actively routed across decentralized liquidity pools, automated market makers, and institutional lending vaults. When a withdrawal request is submitted:
 1. **Orderly Liquidity Unwinding**: Smart Executors unwind active pool allocations during discrete 5-minute harvest epochs to prevent price impact, slippage, and premature vault exit fees.
-2. **Multi-Tier Security & Risk Clearance**: Every withdrawal undergoes automated risk reconciliation, cryptographic authorization via email and 2FA, and proof-of-reserve validation.
+2. **Multi-Tier Security & Risk Clearance**: Every withdrawal undergoes automated risk reconciliation, cryptographic authorization via the emailed confirmation link, and proof-of-reserve validation.
 3. **Automated On-Chain Dispatch**: Once security and clearing gates verify the transaction, capital is broadcast directly on-chain with an immutable transaction hash for instant block explorer verification.
 </Info>
 
